@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Auth from './auth/Auth';
 import * as serviceWorker from './auth/serviceWorker';
+require('dotenv').config()
 
 ReactDOM.render(<Auth />, document.getElementById('root'));
 
