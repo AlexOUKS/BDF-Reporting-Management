@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 
+
 urlpatterns = [
     path('authBDF/', include('authBDF.urls')),
     url(r'^admin/', admin.site.urls),
