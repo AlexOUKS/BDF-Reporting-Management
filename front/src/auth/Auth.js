@@ -7,9 +7,9 @@ import './Auth.css';
 import { Button, FormGroup, Label, Input, Alert} from 'reactstrap';
 
 class Auth extends Component {
+
   constructor(props) {
     super(props);
-
     this.state = {
       login: '',
       mdp: '',
@@ -19,6 +19,7 @@ class Auth extends Component {
     this.loginChange = this.loginChange.bind(this);
     this.mdpChange = this.mdpChange.bind(this);
     this.login = this.login.bind(this);
+    
   }
 
   loginChange(event) {
@@ -27,30 +28,32 @@ class Auth extends Component {
 
   mdpChange(event) {
     this.setState({mdp: event.target.value});
-
   }
 
-
-  login() {
-    axios.post(process.env.REACT_APP_API_URL+'/authBDF/login', 
-    
-    this.state, 
-    {
-      headers : {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+  
+  login(e) {
+    if(e.key == 'Enter'){
+      axios.post(
+        process.env.REACT_APP_API_URL+'/authBDF/login', 
+        this.state, 
+        {
+          headers : {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+          }
+        } 
+        )
+        .then(r => this.loginOk(r))
+        .catch(r => this.loginFail(r));
       }
-    }
-    )
-      .then(response => Auth.loginOk)
-      .catch(error => Auth.loginFail);
   }
 
-  loginOk() {
-
+  loginOk(response) {
+    sessionStorage.setItem('login', 'ok');
+    this.setState({loginError : false});
   }
 
-  loginFail() {
-    this.state.loginError = true;
+  loginFail(response) {
+    this.setState({loginError : true});
   }
 
   // ----------------------- VUE HTML -----------------------------
@@ -59,23 +62,23 @@ class Auth extends Component {
     return (
       <div className="Auth">
         <div className="AuthRightBlock">
-        
           <div className="LoginBlock">
-            <Alert className={this.state.loginError ? 'hidden' : ''} color="danger">
+          {this.state.loginError ? <Alert color="danger" >
               Identifiants incorrects
-            </Alert>
+            </Alert> : '' }
+            
             <div className="InnerBlockLogin"> 
               <FormGroup>
                 <img className="ImgLoginBlock" src={user} />
                 <Label for="exampleEmail">Login</Label>
-                <Input onChange={this.loginChange}></Input>
+                <Input onChange={this.loginChange} onKeyPress={this.login}></Input>
               </FormGroup>
               <FormGroup>
                 <img className="ImgLoginBlock" src={lock} />
                 <Label for="examplePassword">Mot de passe</Label>
-                <Input onChange={this.mdpChange} type="password" name="password" />
+                <Input onChange={this.mdpChange} onKeyPress={this.login} type="password" name="password" />
               </FormGroup>
-              <Button  onClick={this.login} className="ButtonLogin" outline color="primary">Connexion</Button>{' '}
+              <Button  onClick={this.login} className="ButtonLogin"  outline color="primary">Connexion</Button>{' '}
             </div>
           </div>
         </div>

@@ -6,7 +6,12 @@ import Auth from './auth/Auth';
 import * as serviceWorker from './auth/serviceWorker';
 require('dotenv').config()
 
-ReactDOM.render(<Auth />, document.getElementById('root'));
+if (!sessionStorage.getItem('login')) {
+    ReactDOM.render(<Auth />, document.getElementById('root'));
+} else {
+   
+}
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
