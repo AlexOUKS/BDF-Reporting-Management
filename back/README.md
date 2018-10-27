@@ -20,3 +20,11 @@ Table of contents
 * [Tests](#tests)
 * [Authors](#authors)
 <!--te-->
+
+
+## Authors
+
+1. [Aurélien Broutin](https://github.com/AurelienBroutin)
+2. [Alexis Ouksel](https://github.com/AlexOUKS)
+
+[To the top!](#sudoku-solver)
