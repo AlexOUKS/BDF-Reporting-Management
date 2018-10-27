@@ -11,7 +11,7 @@ class Menu extends Component {
     return (
       <div className="MenuNav">
             <div className="BlockLogo">
-                <img className="ImgLogo" src={logo} />
+                <img className="ImgLogo2" src={logo} />
             </div>
             <ul className="MenuList">
                 <li>
