@@ -32,7 +32,7 @@ class Auth extends Component {
 
   
   login(e) {
-    if(e.key == 'Enter'){
+    if(e.key === 'Enter' || e.type === 'click'){
       axios.post(
         process.env.REACT_APP_API_URL+'/authBDF/login', 
         this.state, 
@@ -50,6 +50,9 @@ class Auth extends Component {
   loginOk(response) {
     sessionStorage.setItem('login', 'ok');
     this.setState({loginError : false});
+    // A changer si possible, mauvaise méthode..
+    //eslint-disable-next-line
+    window.location.reload();
   }
 
   loginFail(response) {
