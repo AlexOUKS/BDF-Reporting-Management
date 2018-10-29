@@ -83,6 +83,28 @@ OR
 
 Download it directly from the GitHub page
 
+### Quick start
+
+To start a program go to the directory where the API files are located and execute thoses commands:
+
+1. To create the mapping between models and database :
+`
+$ python manage.py makemigrations
+`
+2. To launch your API on your environment :
+`
+$ python manage.py runserver
+`
+
+## How does it work
+
+Incoming...
+
+## Tests
+
+Incoming...
+
+
 ## Authors
 
 1. [Aurélien Broutin](https://github.com/AurelienBroutin)
