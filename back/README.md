@@ -1,6 +1,6 @@
 # BDF-Reporting-Management API
 
-This is API is designed for managing the intern needs of an association called "Le Bureau des Festivités" from the University of Technology of Belfort-Montbeliard. It used Python as main language and the framework Django. This also a project for our project course TO52.
+This API is designed for managing the intern needs of an association called "Le Bureau des Festivités" from the University of Technology of Belfort-Montbeliard. It uses Python as main language and the framework Django. This also a project for our project course TO52.
 
 <img src="https://github.com/AlexOUKS/BDF-Reporting-Management/blob/master/front/src/img/bdf.jpg" width="350" title="hover text" align="center">
 
@@ -8,7 +8,7 @@ This is API is designed for managing the intern needs of an association called "
 Table of contents
 =================
 <!--ts-->
-* [BDF-Reporting-Management API](#API-BEF)
+* [BDF-Reporting-Management API](#API-BDF)
 * [Getting Started](#getting-started)
     * [Prerequisites](#prerequisites)
         * [Python](#python)
@@ -85,7 +85,7 @@ Download it directly from the GitHub page
 
 ### Quick start
 
-To start a program go to the directory where the API files are located and execute thoses commands:
+To deploy your API, go to the directory where the API files are located and execute thoses commands:
 
 1. To create the mapping between models and database :
 `
@@ -110,4 +110,4 @@ Incoming...
 1. [Aurélien Broutin](https://github.com/AurelienBroutin)
 2. [Alexis Ouksel](https://github.com/AlexOUKS)
 
-[To the top!](#sudoku-solver)
+[To the top!](#BDF-Reporting-Management API)
