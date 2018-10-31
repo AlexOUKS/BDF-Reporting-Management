@@ -44,7 +44,7 @@ For other Linux flavors, OS X and Windows, packages are available at:
 
 **Install Django from PiP in your virtual environment (recommended):**
 
-```sudo pip install keras```
+```sudo pip install django```
 
 **Install Django for Windows user:**
 
