@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-
+import hashlib
 class Validators:
 
     @staticmethod
@@ -36,5 +36,6 @@ class Validators:
 if __name__ == "__main__":
     valid = Validators()
     empty = None
-    notEmpty = "2"
-    print(valid.is_type(notEmpty,int))
+    notEmpty = "admin"
+    result = hashlib.md5(notEmpty.encode())
+    print(result.hexdigest())

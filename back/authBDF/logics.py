@@ -3,14 +3,20 @@ from django.http import HttpResponse, HttpResponseForbidden
 from authBDF.models import User
 import json
 import datetime
+import hashlib
 
 def login(request):
     data = json.loads(request.body.decode('utf-8'))
     if (request.method == "POST"):
-        user = User.objects.filter(nom=data['login']).filter(mdp=data['mdp'])
+        user = User.objects.filter(nom=data['login'])
         if user:
-            user.update(dateDerniereConnexion = datetime.datetime.now())
-            return HttpResponse("Connexion réussie")
+            hashmdp = hashlib.md5(data['mdp'].encode()+user[0].grainsel.encode())
+            hashmdp = hashmdp.hexdigest()
+            if user[0].mdp.lower() == hashmdp.lower():
+                user.update(dateDerniereConnexion = datetime.datetime.now())
+                return HttpResponse("Connexion réussie")
+            else:
+                return HttpResponseForbidden("Mauvais indentifiants")
         else:
             return HttpResponseForbidden("Mauvais indentifiants")
     else:

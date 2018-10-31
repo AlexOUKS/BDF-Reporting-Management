@@ -52,7 +52,7 @@ class Auth extends Component {
     this.setState({loginError : false});
     // A changer si possible, mauvaise méthode..
     //eslint-disable-next-line
-    window.location.reload();
+    //window.location.reload();
   }
 
   loginFail(response) {

@@ -11,7 +11,7 @@ Table of contents
 * [BDF-Reporting-Management Client](#BDF-Client)
 * [Getting Started](#getting-started)
     * [Prerequisites](#prerequisites)
-        * [Node.js"](#nodejs)
+        * [Node.js](#nodejs)
         * [BDF-Reporting-Management API](#bdf-reporting-management)
         * [Depedencies](#django)
     * [Quick start](#quick-start)
