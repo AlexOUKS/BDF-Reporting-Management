@@ -7,10 +7,10 @@ import Menu from './menu/Menu';
 import * as serviceWorker from './auth/serviceWorker';
 require('dotenv').config()
 
-if (!sessionStorage.getItem('login')) {
-    ReactDOM.render(<Auth />, document.getElementById('root'));
+if (sessionStorage.getItem('login') === "444BCB3A3FCF8389296C49467F27E1D6") {
+    ReactDOM.render(<Menu />, document.getElementById('root'));
 } else {
-   ReactDOM.render(<Menu />, document.getElementById('root'));
+    ReactDOM.render(<Auth />, document.getElementById('root'));
 }
 
 

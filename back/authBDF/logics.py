@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from authBDF.models import User
 import json
 import datetime
@@ -14,7 +14,7 @@ def login(request):
             hashmdp = hashmdp.hexdigest()
             if user[0].mdp.lower() == hashmdp.lower():
                 user.update(dateDerniereConnexion = datetime.datetime.now())
-                return HttpResponse("Connexion réussie")
+                return JsonResponse({'etat' : "Connexion réussie", 'lvl' : user[0].niveauAuth})
             else:
                 return HttpResponseForbidden("Mauvais indentifiants")
         else:

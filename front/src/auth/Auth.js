@@ -48,7 +48,8 @@ class Auth extends Component {
   }
 
   loginOk(response) {
-    sessionStorage.setItem('login', 'ok');
+    sessionStorage.setItem('login', '444BCB3A3FCF8389296C49467F27E1D6');
+    sessionStorage.setItem('lvl', response.data.lvl);
     this.setState({loginError : false});
     // A changer si possible, mauvaise méthode..
     //eslint-disable-next-line
