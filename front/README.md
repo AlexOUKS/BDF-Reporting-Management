@@ -14,6 +14,7 @@ Table of contents
         * [Node.js](#nodejs)
         * [BDF-Reporting-Management API](#bdf-reporting-management)
         * [Depedencies](#django)
+        * [Environnement variables](#env)
     * [Quick start](#quick-start)
 * [How does it work?](#how-does-it-work)
 * [Tests](#tests)
@@ -53,6 +54,13 @@ For installing all the packages needed to run our client, run this command in th
 
 ```npm install```
 
+#### Environnement variables
+
+Create a file called **.env**, put it in the root of the project with this code :
+
+```REACT_APP_API_URL=URL_OF_YOUR_API```
+
+It configures the url of the API for all of the requests made by the application
 
 ### Quick start
 
