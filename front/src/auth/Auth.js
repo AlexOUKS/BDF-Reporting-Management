@@ -33,12 +33,13 @@ class Auth extends Component {
   
   login(e) {
     if(e.key === 'Enter' || e.type === 'click'){
-      axios.post(
-        process.env.REACT_APP_API_URL+'/authBDF/login', 
-        this.state, 
+      axios.post(process.env.REACT_APP_API_URL+'/authBDF/login', 
+        {'login' : this.state.login,
+          'mdp' : this.state.mdp, 
+        },
         {
           headers : {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            'Content-Type': 'application/x-www-form-urlencoded'
           }
         } 
         )

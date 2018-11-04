@@ -1,0 +1,23 @@
+.TableUsers Button{
+    padding:5px;
+}
+.TableUsers {
+    text-align: center;
+    margin:auto;
+}
+.NewUser {
+    width:15px;
+}
+
+.TableUsers img{
+    width:30px;
+}
+
+.card {
+    margin-top:10px;
+}
+tbody tr:hover{
+    background:#2c3e50;
+    color:white;
+    transition: 0.2s ease-in-out;
+}

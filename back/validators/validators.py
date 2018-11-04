@@ -8,30 +8,37 @@ class Validators:
         Check if value is certain type
         :param value: It can be list or a single value of anything
         :param value_type: For which python type are we testing the type of value (str, int, float, list...)
-        :return: True if value is that type, Expection if not
+        :return: True if value is that type, False if not
         """
         if isinstance(value, value_type):
             return True
         else:  
-            raise ValidationError(
-                ('%(value)s is not a %(value_type)s'),
-                params={'value': value, 'value_type' : value_type},
-            )
+            return False
 
     @staticmethod
     def is_not_empty(value):
         """
         Check if value empty
         :param value: It can be list or a single value of anything
-        :return: True if value is not empty, Exception if empty
+        :return: True if value is not empty, False if empty
         """
-        if value is None:
-            raise ValidationError(
-                ('%(value)s is empty'),
-                params={'value': value},
-            )
+        if not value or value == "":
+            return False
         else:  
             return True
+
+    @staticmethod
+    def key_exists(array, key):
+        """
+        Check if key exists in array
+        :param array: array
+        :param key: the key in array
+        :return: True if key exists, false if doesn't exist
+        """
+        if key in array:
+            return True
+        else:  
+            return False
 
 if __name__ == "__main__":
     valid = Validators()

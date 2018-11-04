@@ -51,3 +51,30 @@
 .ImgLogo2 {
     width: 200px;
 }
+
+.CreationCompte {
+    position: absolute;
+    bottom: 0;
+}
+
+#MainBlock {
+    width: auto;
+    margin-left:240px;
+    background: linear-gradient(to left, #f1f1f1, #FFFFFF);
+}
+
+.MainBlockInner {
+    padding:30px;
+    height:100vh;
+}
+
+.MainContent {
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+    height:92vh;
+    background: white;
+    padding: 20px;
+}
+
+.Page {
+    width:100%;
+}
