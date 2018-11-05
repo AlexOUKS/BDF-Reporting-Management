@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
-import hashlib
+from django.http import HttpResponseForbidden
+import hashlib, json
+
 class Validators:
 
     @staticmethod
@@ -39,6 +41,41 @@ class Validators:
             return True
         else:  
             return False
+
+    @staticmethod
+    def keys_are_inside_arrays(array, keys):
+        """
+        Check if the array have the keys wanted
+        :param array: array
+        :param keys: array of keys
+        :return: True if all keys exists inside array, array of keys missing if one or more keys doesn't exist
+        """
+
+        errors = []
+
+        for key in keys:
+            if Validators.key_exists(array, key) == False:
+                errors.append(key)
+
+        if errors:
+            return errors
+        else:
+            return True
+
+    @staticmethod
+    def is_valid_json(jsonInput):
+        """
+        Check if the json received is good formatted
+        :param array: JSON
+        :return: True if JSON is valid, False if not
+        """
+
+        try: 
+            data = json.loads(jsonInput)
+        except ValueError:
+            return False
+
+        return data
 
 if __name__ == "__main__":
     valid = Validators()

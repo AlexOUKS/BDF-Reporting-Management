@@ -19,7 +19,7 @@ class Menu extends Component {
             display = <NewUser />;
         }
         return (
-            <div class="Page"> 
+            <div className="Page"> 
                 <div className="MenuNav">
                         <div className="BlockLogo">
                             <img className="ImgLogo2" src={logo} />

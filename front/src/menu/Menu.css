@@ -65,12 +65,12 @@
 
 .MainBlockInner {
     padding:30px;
-    height:100vh;
+    height:auto;
 }
 
 .MainContent {
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-    height:92vh;
+    height:auto;
     background: white;
     padding: 20px;
 }
