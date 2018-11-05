@@ -9,15 +9,39 @@ import './Menu.css';
 
 class Menu extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            display: <img src={logo} width="500px" />
+        };
 
+        
+    
+    }
+
+    display(menu) {
+        switch (menu) {
+            case "ventes":
+                
+            break;
+            case "ventes":
+                
+            break;
+            case "stocks":
+
+            break;
+            case "user":
+                this.setState({display : <NewUser />});
+            break;
+        
+            default:
+                break;
+        }
+    }
     
     // ----------------------- VUE HTML -----------------------------
 
     render() {
-        let display = "";
-        if (display == "") {
-            display = <NewUser />;
-        }
         return (
             <div className="Page"> 
                 <div className="MenuNav">
@@ -25,15 +49,15 @@ class Menu extends Component {
                             <img className="ImgLogo2" src={logo} />
                         </div>
                         <ul className="MenuList">
-                            <li>
+                            <li onClick={this.display.bind(this,"ventes")}>
                                 <img src={reporting} />
                                 <span> Reporting des ventes </span>
                             </li>
-                            <li>
+                            <li onClick={this.display.bind(this,"stocks")}>
                                 <img src={stock} />
                                 <span> Gestion des stocks </span>
                             </li>
-                            <li className="CreationCompte">
+                            <li className="CreationCompte" onClick={this.display.bind(this,"user")}>
                                 <img src={user} />
                                 <a><span> Gestion utilisateurs </span></a>
                             </li>
@@ -43,7 +67,7 @@ class Menu extends Component {
                     <div className="MainBlockInner">
                         <div className="MainContent">
                             {
-                                display
+                                this.state.display
                             }
                         </div>
                     </div>
