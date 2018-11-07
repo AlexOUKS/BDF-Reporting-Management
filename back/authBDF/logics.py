@@ -7,9 +7,16 @@ import hashlib, datetime, json, string, random
 
 def login(request): 
     if (request.method == "POST"):
-        data = Validators.is_valid_json(request.body.decode('utf-8'))
+        data = Validators.is_valid_json(request.body)
         if data == False:
             return HttpResponseBadRequest("Le JSON dans le corps de votre requête est mal formaté")
+
+        fields = ["login", "mdp"]
+        errors = Validators.keys_are_inside_arrays(data, fields)
+        
+        if Validators.is_type(errors, list):
+            return HttpResponseBadRequest("Champs manquants : " + json.dumps(errors))
+
 
         user = User.objects.filter(login=data['login'])
 
@@ -28,9 +35,9 @@ def login(request):
 
 def newUser(request):
     if (request.method == "POST"):
-        if Validators.is_not_empty(request.body.decode('utf-8')):   
+        if Validators.is_not_empty(request.body):   
 
-            data = Validators.is_valid_json(request.body.decode('utf-8'))
+            data = Validators.is_valid_json(request.body)
             if data == False:
                 return HttpResponseBadRequest("Le JSON dans le corps de votre requête est mal formaté")
             
@@ -76,14 +83,16 @@ def newUser(request):
             user.save()
 
             return JsonResponse({'etat' : "Utilisateur créé"})
+        else:
+            return HttpResponseBadRequest("Vous n'avez pas mis de corps à votre requête")
 
     return HttpResponseForbidden("Accès refusé")
 
 def deleteUser(request):
 
     if (request.method == "DELETE"):
-        if Validators.is_not_empty(request.body.decode('utf-8')):
-            data = Validators.is_valid_json(request.body.decode('utf-8'))
+        if Validators.is_not_empty(request.body):
+            data = Validators.is_valid_json(request.body)
             if data == False:
                 return HttpResponseBadRequest("Le JSON dans le corps de votre requête est mal formaté")
             
@@ -103,14 +112,16 @@ def deleteUser(request):
                 return HttpResponseForbidden("Utilisateur non existant")
 
             return JsonResponse({'etat' : "Utilisateur supprimé"})
+        else:
+            return HttpResponseBadRequest("Vous n'avez pas mis de corps à votre requête")
      
     return HttpResponseForbidden("Accès refusé")
 
 def editUser(request):
-
+    
     if (request.method == "PUT"):
-        if Validators.is_not_empty(request.body.decode('utf-8')):
-            data = Validators.is_valid_json(request.body.decode('utf-8'))
+        if Validators.is_not_empty(request.body):
+            data = Validators.is_valid_json(request.body)
             if data == False:
                 return HttpResponseBadRequest("Le JSON dans le corps de votre requête est mal formaté")
             
@@ -155,11 +166,12 @@ def editUser(request):
             user.save()
 
             return JsonResponse({'etat' : "Utilisateur modifié"})
-
-    return HttpResponseForbidden("Accès refusé")
+        else:
+            return HttpResponseBadRequest("Vous n'avez pas mis de corps à votre requête")
+    else:
+        return HttpResponseForbidden("Accès refusé")
 
 def getUsers(request):
-
     if (request.method == "GET"):
             
         users = User.objects.all()
@@ -167,8 +179,11 @@ def getUsers(request):
         usersJson = [ obj.to_json() for obj in users ]
 
         return HttpResponse(json.dumps({"data": usersJson}), content_type='application/json')
-
+    
     return HttpResponseForbidden("Accès refusé")
 
 def random_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))
+
+if __name__ == "__main__":
+    logics.getUsers()
