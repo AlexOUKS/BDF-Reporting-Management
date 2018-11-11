@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5b98511-b903-4397-8809-36ba7c14be34" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/back/ventes/logics.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/ventes/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/middleware/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/back/middleware/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/toProject/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/back/toProject/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/ventes/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/back/ventes/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/ventes/logics.py" beforeDir="false" afterPath="$PROJECT_DIR$/back/ventes/logics.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -29,13 +24,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="1" />
-          <entry key="py" value="359" />
+          <entry key="py" value="1551" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="359" />
+          <entry key="Python" value="1551" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -55,11 +50,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/back/ventes/logics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+            <state relative-caret-position="408">
+              <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
-                <marker date="1541960060650" expanded="true" signature="303:304" ph="..." />
+                <marker date="1541965301011" expanded="true" signature="303:304" ph="..." />
               </folding>
             </state>
           </provider>
@@ -396,11 +391,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/back/ventes/logics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        <state relative-caret-position="408">
+          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
-            <marker date="1541960060650" expanded="true" signature="303:304" ph="..." />
+            <marker date="1541965301011" expanded="true" signature="303:304" ph="..." />
           </folding>
         </state>
       </provider>
