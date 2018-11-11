@@ -24,8 +24,8 @@ def login(request):
             hashmdp = hashlib.md5(data['mdp'].encode()+user[0].grainsel.encode())
             hashmdp = hashmdp.hexdigest()
             if user[0].mdp.lower() == hashmdp.lower():
-                user.update(dateDerniereConnexion = datetime.datetime.now())
-                return JsonResponse({'etat' : "Connexion réussie", 'lvl' : user[0].niveauAuth})
+                user.update(dateDerniereConnexion = datetime.datetime.now(), token = random_generator(size=30))
+                return JsonResponse({'etat' : "Connexion réussie", 'lvl' : user[0].niveauAuth, 'token' : user[0].token})
             else:
                 return HttpResponseBadRequest("Mauvais indentifiants")
         else:

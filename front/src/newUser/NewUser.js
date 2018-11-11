@@ -25,7 +25,12 @@ class NewUser extends Component {
 
    
     componentDidMount() {
-        axios.get(process.env.REACT_APP_API_URL+'/authBDF/getUsers')
+        axios.get(process.env.REACT_APP_API_URL+'/authBDF/getUsers',
+        {
+            headers : {
+                'authtoken' : sessionStorage.getItem('token')
+            }
+        } )
             .then(res =>  {
                 const users = res.data;
                 this.setState({ users });
@@ -103,7 +108,8 @@ class NewUser extends Component {
                 },
                 {
                     headers : {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'authtoken' : sessionStorage.getItem('token')
                     }
                 } 
                 )
@@ -124,16 +130,15 @@ class NewUser extends Component {
 
     deleteUser(user) {
         axios.delete(process.env.REACT_APP_API_URL+'/authBDF/deleteUser', 
-                {data :     
+                {   data :     
                     {
                         'login' : user,
                     },
-                },
-                {
                     headers : {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'authtoken' : sessionStorage.getItem('token')
                     }
-                } 
+                },
                 )
             .then(r => {
                 this.closeModal("modalDeleteUser");
@@ -170,7 +175,8 @@ class NewUser extends Component {
                 },
                 {
                     headers : {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'authtoken' : sessionStorage.getItem('token')
                     }
                 } 
                 )

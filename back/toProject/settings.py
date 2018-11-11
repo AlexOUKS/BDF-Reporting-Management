@@ -69,6 +69,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'middleware.config.EntryMiddleware'
 ]
 
 ROOT_URLCONF = 'toProject.urls'
@@ -146,6 +147,19 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'authtoken'
+)
 
 #CORS_ORIGIN_WHITELIST = (
  #   '<YOUR_DOMAIN>[:PORT]',
