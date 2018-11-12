@@ -9,22 +9,118 @@ import hashlib, datetime, json, string, random
 def load(request):
     if (request.method == "POST"):
         file = request.FILES["file"]
-        file2 = file
-        fileLines=file2.readlines()
         if(file.content_type == 'text/csv'):
             firstLine = file.readline().decode('utf-8')
-            print(firstLine)
             secondLine = file.readline().decode('utf-8')
-            thridLine = file.readline().decode('utf-8')
-            #return HttpResponse(file.readline())
-            line= ""
-            print(len(fileLines)-1)
-            for i in range(3,len(fileLines)-1): # i est un type bytes (tableau d'array), need to decode
-                line = file.readline().decode('utf-8') # i2 est un type str
+            thirdLine = file.readline().decode('utf-8')
+            print(firstLine)
+            print(secondLine)
+            print(thirdLine)
+            file.readline() # enlever la ligne des noms de colonnes
+            Date  = Barman = Client = Etiquette = Quantité = Total = MéthodePaiment = SellingPrice = PurchasePrice = Benefit = ""
+            Comptoir = ""
+            for line in file.readlines():
+                line2 = line.decode('utf-8')
+                i=0
+                while line2[i] != ';':
+                    if (line2[i] != '\"'):
+                        #print (line2[i])
+                        Date += line2[i]
+                    i+=1
+                i+=2
 
-#traiter les lignes
-            #for chunk in file.chunks():
-            return HttpResponse(line)
+
+                while line2[i] != ';':
+                    if (line2[i] != '\"'):
+                        #print (line2[i])
+                        Comptoir += line2[i]
+                    i+=1
+                i += 2
+
+
+                while line2[i] != ';':
+                    if (line2[i] != '\"'):
+                        #print (line2[i])
+                        Barman += line2[i]
+                    i+=1
+                i += 2
+                while line2[i] != ';':
+                    if (line2[i] != '\"'):
+                        #print (line2[i])
+                        Client += line2[i]
+                    i+=1
+                i += 2
+                while line2[i] != ';':
+                    if (line2[i] != '\"'):
+                        #print (line2[i])
+                        Etiquette += line2[i]
+                    i+=1
+                i += 2
+
+                while line2[i] != ';':
+                    if (line2[i] != '\"'):
+                        #print (line2[i])
+                        Quantité += line2[i]
+                    i+=1
+                i += 2
+
+                while line2[i] != ';':
+                    if (line2[i] != '\"'):
+                        #print (line2[i])
+                        Total += line2[i]
+                    i+=1
+                i += 2
+
+                while line2[i] != ';':
+                    if (line2[i] != '\"'):
+                        #print (line2[i])
+                        MéthodePaiment += line2[i]
+                    i+=1
+                i += 2
+
+                while line2[i] != ';':
+                    if (line2[i] != '\"'):
+                        #print (line2[i])
+                        SellingPrice += line2[i]
+                    i+=1
+                i += 2
+
+                while line2[i] != ';':
+                    if (line2[i] != '\"'):
+                        #print (line2[i])
+                        PurchasePrice += line2[i]
+                    i+=1
+                i += 2
+
+                while i < len(line2):
+                    if (line2[i] != '\"'):
+                        #print (line2[i])
+                        Benefit += line2[i]
+                    i+=1
+                print("Date =" + Date)
+                print("Comptoir =" + Comptoir)
+                print("Barman =" + Barman)
+                print("Client =" + Client)
+                print("Etiquette =" + Etiquette)
+                print("Quantité =" + Quantité)
+                print("Total =" + Total)
+                print("MéthodePaiment =" + MéthodePaiment)
+                print("SellingPrice =" + SellingPrice)
+                print("PurchasePrice =" + PurchasePrice)
+                print("Benefit =" + Benefit)
+
+                #Puis mettre requete pour remplir la BDD
+
+
+
+
+
+                return HttpResponse(Comptoir)
+
+
+
+
+
 
 
 
