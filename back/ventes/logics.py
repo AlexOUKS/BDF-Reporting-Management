@@ -48,7 +48,7 @@ def load(request):
                     methodePaiment = methodePaimentExist
                 else:
                     print("existe pas")
-                    # requete mettre la methode de paiment dans la base
+                    methodePaiment.save()
 
                 lieuDeVie = LieuDeVie()
                 lieuDeVie.nom = line3[1].replace('\"', "")
@@ -59,7 +59,7 @@ def load(request):
                     lieuDeVie = lieuDeVieExist # suffisant ou copie point par point necessaire ?
                 else:
                     print("existe pas")
-                    # requete mettre le lieu de vie dans la base
+                    lieuDeVie.save()
 
                 vente = Vente()
                 vente.dateVente = line3[0].replace('\"', "")
@@ -70,7 +70,7 @@ def load(request):
                 vente.purchaseBy = line3[3].replace('\"', "")
                 vente.pruchaseBy = line3[5].replace('\"', "")
 
-                # Puis mettre vente dans la BDD
+                vente.save()
 
                 return HttpResponse(vente)
         return HttpResponseBadRequest("Fichier incompatible ! Veuillez upload un fichier CSV")
