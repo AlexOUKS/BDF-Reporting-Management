@@ -37,7 +37,7 @@ def load(request):
                 else:
                     produit.prixAchat = line3[-2].replace('\"', "")
                     produit.prixVente = line3[-3].replace('\"', "")
-                    #requete mettre ce produit dans la base
+                    produit.save()
 
                 methodePaiment = MethodePaiement()
                 methodePaiment.nom = line3[-4].replace('\"', "")
