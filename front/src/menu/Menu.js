@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import NewUser from '../newUser/NewUser';
+import Stock from '../stock/Stock';
 import reporting from './img/increasing-stocks-graphic.svg';
 import user from './img/user.svg';
 import stock from './img/box.svg';
@@ -27,8 +28,8 @@ class Menu extends Component {
             case "ventes":
                 
             break;
-            case "stocks":
-
+            case "stock":
+                this.setState({display : <Stock />});
             break;
             case "user":
                 this.setState({display : <NewUser />});
@@ -53,7 +54,7 @@ class Menu extends Component {
                                 <img src={reporting} />
                                 <span> Reporting des ventes </span>
                             </li>
-                            <li onClick={this.display.bind(this,"stocks")}>
+                            <li onClick={this.display.bind(this,"stock")}>
                                 <img src={stock} />
                                 <span> Gestion des stocks </span>
                             </li>

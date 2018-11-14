@@ -202,7 +202,7 @@ class NewUser extends Component {
                 <Row>
                     <Col>
                         <h3>
-                            Gestions des utilisateurs
+                            Gestion des utilisateurs
                         </h3>
                     </Col>
                 </Row>
