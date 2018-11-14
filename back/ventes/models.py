@@ -34,6 +34,8 @@ class Vente(models.Model):
     idLieuDeVie = models.OneToOneField(LieuDeVie, on_delete = models.CASCADE)
     alt = models.CharField(max_length=30)
     selledBy = models.CharField(max_length = 30)
+    purchaseBy = models.CharField(max_length = 30)
+    amount = models.IntegerField()
 
 
 
