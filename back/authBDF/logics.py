@@ -56,10 +56,13 @@ def newUser(request):
             
             if Validators.is_not_empty(userExist):
                 return HttpResponseBadRequest("Utilisateur déjà existant")
+            
 
             if Validators.is_not_empty(login):
                 user.login = login
-            
+            else:
+                return HttpResponseBadRequest("Champ login vide")
+
             if Validators.is_not_empty(mdp):
                 randomStr = random_generator()
                 grainsel = hashlib.md5(randomStr.encode())
@@ -68,12 +71,16 @@ def newUser(request):
 
                 mdpHashed = hashlib.md5(mdp.encode()+grainsel.encode())
                 user.mdp = mdpHashed.hexdigest()
+            else:
+                return HttpResponseBadRequest("Champ mdp vide")
 
             if Validators.is_not_empty(niveauAuth):
                 try: 
                     int(niveauAuth)
                 except ValueError:
                     return HttpResponseBadRequest("Niveau d'authentification doit être un entier")
+            else:
+                return HttpResponseBadRequest("Champ niveauAuth vide")
 
                 user.niveauAuth = niveauAuth
 

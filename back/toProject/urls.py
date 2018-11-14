@@ -22,6 +22,7 @@ from django.urls import include, path
 urlpatterns = [
     path('authBDF/', include('authBDF.urls')),
     path('ventes/', include('ventes.urls')),
+    path('stock/', include('stock.urls')),
     url(r'^admin/', admin.site.urls),
 
 ]
