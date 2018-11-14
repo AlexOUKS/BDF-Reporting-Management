@@ -26,13 +26,10 @@ def load(request):
                 line2 = line.decode('utf-8')
                 line3 = line2.split(';')
 
-
-
                 produit = Produit()
                 produit.nom = line3[4].replace('\"', "")
 
-
-                productExist = Product.objects.filter(nom=produit.nom)
+                productExist = Produit.objects.filter(nom=produit.nom)
 
                 if Validators.is_not_empty(productExist):
                     print("produit déjà existant")
@@ -44,7 +41,7 @@ def load(request):
 
                 methodePaiment = MethodePaiement()
                 methodePaiment.nom = line3[-4].replace('\"', "")
-                methodePaimentExist = MethodePaiment.objects.filter(nom=methodePaiment.nom)
+                methodePaimentExist = MethodePaiement.objects.filter(nom=methodePaiment.nom)
 
                 if Validators.is_not_empty(methodePaimentExist):
                     print("methodePaiment déjà existant")
@@ -55,14 +52,14 @@ def load(request):
 
                 lieuDeVie = LieuDeVie()
                 lieuDeVie.nom = line3[1].replace('\"', "")
-                lieuDeVieExist = MethodePaiment.objects.filter(nom=lieuDeVie.nom)
+                lieuDeVieExist = MethodePaiement.objects.filter(nom=lieuDeVie.nom)
 
                 if Validators.is_not_empty(lieuDeVieExist):
                     print("lieuDeVie déjà existant")
-                    lieuDeVie = lieuDeVieExist
+                    lieuDeVie = lieuDeVieExist # suffisant ou copie point par point necessaire ?
                 else:
                     print("existe pas")
-                    # requete mettre la methode de paiment dans la base
+                    # requete mettre le lieu de vie dans la base
 
                 vente = Vente()
                 vente.dateVente = line3[0].replace('\"', "")
@@ -73,10 +70,9 @@ def load(request):
                 vente.purchaseBy = line3[3].replace('\"', "")
                 vente.pruchaseBy = line3[5].replace('\"', "")
 
+                # Puis mettre vente dans la BDD
 
-                # Puis mettre requete pour remplir la BDD
-
-                return HttpResponse(line3)
+                return HttpResponse(vente)
         return HttpResponseBadRequest("Fichier incompatible ! Veuillez upload un fichier CSV")
     else:
         return HttpResponseForbidden("Demande refusée")
