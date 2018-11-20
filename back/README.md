@@ -91,7 +91,11 @@ To deploy your API, go to the directory where the API files are located and exec
 `
 $ python manage.py makemigrations
 `
-2. To launch your API on your environment :
+2. Apply it in your database :
+`
+$ python manage.py migrate
+`
+3. To launch your API on your environment :
 `
 $ python manage.py runserver
 `

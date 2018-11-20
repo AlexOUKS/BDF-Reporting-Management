@@ -70,32 +70,39 @@ class Stock extends Component {
 
     
     countCategories() {
-        let tmpName = ""
-        let count = 0;
 
-        let categories = []
+        let categories = [];
+
         for (let i=0; i < Object.keys(this.state.products.data).length; i++) {
-            console.error(this.state.products.data[3]);
+            
             let product = this.state.products.data[i];
             
-            if (tmpName == "")
-                tmpName = this.state.products.data[0].categorieProduit;
-                
-            if (i == (Object.keys(this.state.products.data).length)-1) {
-                count++;
-                categories.push({"categorie" : product.categorieProduit, "nb" : count})    
-            } else if (tmpName != product.categorieProduit) {
-                categories.push({"categorie" : tmpName, "nb" : count});
-                tmpName = product.categorieProduit;
-                count = 1;
-                
-            } else {
-                count++;
-            }
-            
+            if (!categories.includes(product.categorieProduit))
+                categories.push(product.categorieProduit);
+        
         }
 
-        console.log(categories);
+        let categorie2 = [];
+
+        for (let j = 0 ; j < categories.length; j++) {
+                
+            categorie2.push({"categorie" : categories[j], "count" : 0});
+        }
+
+        
+        for (let i=0; i < Object.keys(this.state.products.data).length; i++) {
+            let product = this.state.products.data[i];
+
+            for (let j = 0 ; j < categorie2.length; j++) {
+                
+                if (categorie2[j].categorie == product.categorieProduit) {
+                    categorie2[j].count++;
+                }
+            }
+        
+        }
+
+        console.log(categorie2);    
     }
     // ----------------------- VUE HTML -----------------------------
 
