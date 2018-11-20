@@ -3,6 +3,8 @@ import {Bar, Doughnut} from 'react-chartjs-2';
 
 import dispo from "./img/checked.svg";
 import notdispo from "./img/notchecked.svg";
+import modify from '../newUser/img/edit.svg';
+import deleteimg from '../newUser/img/rubbish-bin.svg';
 import './Stock.css';
 import axios from 'axios';
 import Validators from '../validators/validators'
@@ -65,7 +67,10 @@ class Stock extends Component {
                         <th> {product.prixVente} </th>
                         <th> {dispoimg} </th>
                         <th> {product.quantite} </th>
-                        
+                        <th> 
+                            <Button color="warning"><img src={modify} /></Button>{' '}
+                            <Button color="danger"><img src={deleteimg} /></Button>{' '}
+                        </th>  
                     </tr>);
             }
         }
@@ -124,6 +129,7 @@ class Stock extends Component {
 
         let categories = [];
         let colors = []
+        let categorieList = []
 
         for (let i=0; i < Object.keys(this.state.products.data).length; i++) {
             
@@ -132,6 +138,14 @@ class Stock extends Component {
             if (!categories.includes(product.categorieProduit.nom)) {
                 categories.push(product.categorieProduit.nom);
                 colors.push(product.categorieProduit.colorGraph);
+                categorieList.push(<tr>
+                    <th> {product.categorieProduit.nom} </th>
+                    <th> {product.categorieProduit.colorGraph} </th>
+                    <th> 
+                        <Button color="warning"><img src={modify} /></Button>{' '}
+                        <Button color="danger"><img src={deleteimg} /></Button>{' '}
+                    </th>                 
+                </tr>);
             }
                 
         }
@@ -168,8 +182,10 @@ class Stock extends Component {
                     backgroundColor: colors,
                     data: donnees,
                 }]
-            }
-        });   
+            },
+            dataListCategories : categorieList
+        
+        }); 
     }
     // ----------------------- VUE HTML -----------------------------
 
@@ -212,7 +228,7 @@ class Stock extends Component {
                     <Col lg="6">
                         <Card>
                         <h5> Liste des produits </h5>
-                        <hr/>
+                        
                             <Table className="TableUsers">
                                 
                                 <thead>
@@ -224,6 +240,7 @@ class Stock extends Component {
                                     <th>Prix de vente</th>
                                     <th>Disponible</th>
                                     <th>Quantité</th>
+                                    <th>Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -237,22 +254,20 @@ class Stock extends Component {
                     <Col lg="6">
                         <Card>
                         <h5> Liste des catégories </h5>
-                        <hr/>
+                        
                             <Table className="TableUsers">
                                 
                                 <thead>
                                 
                                 <tr>
-                                    <th>Nom du produit</th>
-                                    <th>Catégorie de produit</th>
-                                    <th>Prix d'achat</th>
-                                    <th>Prix de vente</th>
-                                    <th>Disponible</th>
+                                    <th>Nom catégorie</th>
+                                    <th>Couleur catégorie</th>
+                                    <th>Actionst</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                             
-                                {this.showProducts()}
+                                {this.state.dataListCategories}
                                 
                                 </tbody>
                             </Table>
