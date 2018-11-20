@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import {Line, Doughnut} from 'react-chartjs-2';
+import {Bar, Doughnut} from 'react-chartjs-2';
 
+import dispo from "./img/checked.svg";
+import notdispo from "./img/notchecked.svg";
 import './Stock.css';
 import axios from 'axios';
 import Validators from '../validators/validators'
@@ -12,13 +14,15 @@ class Stock extends Component {
         super(props);
         this.state = {
             products: [],
-            data : {
-                labels: ["January", "February", "March"],
-                datasets: [{
-                label: ["My First dataset","ok"],
-                backgroundColor: ["#a3c7c9","#889d9e","#647678"],
-                data: [0, 10, 5],
-                }]
+            dataDoughnut : {
+            },
+            optionDoughnut : {
+
+            },
+            dataBar : {
+            },
+            optionsBar : {
+
             }
         
         }
@@ -39,6 +43,7 @@ class Stock extends Component {
                 this.setState({ products });
                 this.showProducts();
                 this.countCategories();
+                this.showProductsBar("categorie")
               });
         
         
@@ -51,13 +56,14 @@ class Stock extends Component {
         if (Validators.isDefined(this.state.products.data)) {
             for (let i=0; i < Object.keys(this.state.products.data).length; i++) {
                 let product = this.state.products.data[i];
+                let dispoimg = (product.disponible) ? <img src={dispo} /> : <img src={notdispo} />;
                 table.push(
                     <tr>
                         <th> {product.nom} </th>
-                        <th> {product.categorieProduit} </th>
+                        <th> {product.categorieProduit.nom} </th>
                         <th> {product.prixAchat} </th>
                         <th> {product.prixVente} </th>
-                        <th> {product.disponible} </th>
+                        <th> {dispoimg} </th>
                         <th> {product.quantite} </th>
                         
                     </tr>);
@@ -68,41 +74,102 @@ class Stock extends Component {
         return table;
     }
 
+    showProductsBar(filter) {
+
+        let produitsNom = [];
+        let produitsQte = [];
+        let colors = [];
+
+        if (Validators.isDefined(this.state.products.data)) {
+            for (let i=0; i < Object.keys(this.state.products.data).length; i++) {
+                let product = this.state.products.data[i];
+                if (product.categorieProduit.nom == filter) {
+                    produitsNom.push(product.nom);
+                    produitsQte.push(product.quantite);
+                    colors.push('#'+(Math.random()*0xFFFFFF<<0).toString(16));
+                }
+            }
+        }
+        
+        console.log(produitsNom, produitsQte);  
+        this.setState({
+            dataBar : {
+                labels: produitsNom,
+                datasets: [{
+                    backgroundColor: colors,
+                    data: produitsQte,
+                }]
+            },
+            optionsBar: {
+                legend: { display: false },
+                title: {
+                  display: true,
+                  text: filter
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+              }
+        
+        });
+
+    }
+
     
     countCategories() {
 
         let categories = [];
+        let colors = []
 
         for (let i=0; i < Object.keys(this.state.products.data).length; i++) {
             
             let product = this.state.products.data[i];
             
-            if (!categories.includes(product.categorieProduit))
-                categories.push(product.categorieProduit);
-        
+            if (!categories.includes(product.categorieProduit.nom)) {
+                categories.push(product.categorieProduit.nom);
+                colors.push(product.categorieProduit.colorGraph);
+            }
+                
         }
 
-        let categorie2 = [];
+        let categorieStat = [];
+        let donnees = [];
+        
 
         for (let j = 0 ; j < categories.length; j++) {
                 
-            categorie2.push({"categorie" : categories[j], "count" : 0});
+            categorieStat.push({"categorie" : categories[j], "count" : 0});
         }
 
         
         for (let i=0; i < Object.keys(this.state.products.data).length; i++) {
             let product = this.state.products.data[i];
 
-            for (let j = 0 ; j < categorie2.length; j++) {
+            for (let j = 0 ; j < categorieStat.length; j++) {
                 
-                if (categorie2[j].categorie == product.categorieProduit) {
-                    categorie2[j].count++;
+                if (categorieStat[j].categorie == product.categorieProduit.nom) {
+                    categorieStat[j].count++;
+                    donnees[j] =  categorieStat[j].count;
+
                 }
             }
         
         }
-
-        console.log(categorie2);    
+        
+        this.setState({
+            dataDoughnut : {
+                labels: categories,
+                datasets: [{
+                    label: ["My First dataset","ok"],
+                    backgroundColor: colors,
+                    data: donnees,
+                }]
+            }
+        });   
     }
     // ----------------------- VUE HTML -----------------------------
 
@@ -121,20 +188,35 @@ class Stock extends Component {
                 <Row>
                     <Col lg="6">
                         <Card>
-                        < Doughnut
-          data={this.state.data}
-          
-          height={500}
-          width={700}
-          />
+                        < Bar
+                            data={this.state.dataBar}
+                            options= {this.state.optionsBar}
+                            height={500}
+                            width={800}
+                        />
                         </Card>
                     </Col>
+                    <Col lg="6">
+                        <Card>
+                        < Doughnut
+                            data={this.state.dataDoughnut}
+                            options= {this.state.optionDoughnut}
+                            height={500}
+                            width={800}
+                        />
+                        </Card>
+                    </Col>
+                    
                 </Row>
                 <Row>
                     <Col lg="6">
                         <Card>
+                        <h5> Liste des produits </h5>
+                        <hr/>
                             <Table className="TableUsers">
+                                
                                 <thead>
+                                
                                 <tr>
                                     <th>Nom du produit</th>
                                     <th>Catégorie de produit</th>
@@ -154,8 +236,12 @@ class Stock extends Component {
                     </Col>
                     <Col lg="6">
                         <Card>
+                        <h5> Liste des catégories </h5>
+                        <hr/>
                             <Table className="TableUsers">
+                                
                                 <thead>
+                                
                                 <tr>
                                     <th>Nom du produit</th>
                                     <th>Catégorie de produit</th>

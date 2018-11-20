@@ -5,12 +5,14 @@ class CategorieProduit(models.Model):
     id = models.AutoField(primary_key = True)
     nom= models.CharField(max_length = 30)
     alt = models.CharField(max_length=30)
+    colorGraph = models.CharField(max_length=30, default="#ffffff")
 
     def to_json(self):
         return {
             "id" : self.id,
             "nom" : self.nom,
-            "alt" : self.alt
+            "alt" : self.alt,
+            "colorGraph" : self.colorGraph
         }
 
 class Produit(models.Model):
@@ -26,7 +28,7 @@ class Produit(models.Model):
     def to_json(self):
         return {
             "id" : self.id,
-            "categorieProduit" : self.idCategorieProduit.nom,
+            "categorieProduit" : self.idCategorieProduit.to_json(),
             "nom" : self.nom,
             "alt" : self.alt,
             "prixAchat" : self.prixAchat,
