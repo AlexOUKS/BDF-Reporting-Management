@@ -49,14 +49,14 @@ class NewUser extends Component {
                 let user = this.state.users.data[i];
                 table.push(
                     <tr>
-                        <th> {user.login} </th>
-                        <th> {user.dateDerniereConnexion} </th>
-                        <th> {user.dateCreation} </th>
-                        <th> <Badge color="secondary">{user.niveauAuth}</Badge> </th>
-                        <th> 
+                        <td> {user.login} </td>
+                        <td> {user.dateDerniereConnexion} </td>
+                        <td> {user.dateCreation} </td>
+                        <td> <Badge color="secondary">{user.niveauAuth}</Badge> </td>
+                        <td> 
                             <Button color="warning" onClick={this.showModal.bind(this, 'modalEditUser', user)}><img src={modify} /></Button>{' '}
                             <Button color="danger" onClick={this.showModal.bind(this, 'modalDeleteUser', user.login)}><img src={deleteimg} /></Button>{' '}
-                        </th>
+                        </td>
                     </tr>);
             }
         }
@@ -215,7 +215,7 @@ class NewUser extends Component {
                 <Row>
                     <Col lg="8">
                         <Card>
-                        <Table className="TableUsers">
+                        <Table className="Table">
                             <thead>
                             <tr>
                                 <th>Login</th>

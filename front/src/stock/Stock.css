@@ -1,0 +1,13 @@
+.CategorieProduct {
+    border-radius: 20px;
+    padding: 3px 15px 3px 15px;
+    color: white;
+}
+
+.CategorieSize {
+    width : 150px;
+}
+
+.SmallImg {
+    width:50px;
+}
