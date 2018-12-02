@@ -55,7 +55,7 @@ class Stock extends Component {
                 this.setState({ products : products });
                 this.showProducts();
                 this.countCategories();
-                this.showProductsBar("categorie");
+                this.showProductsBar("Alimentaire");
               });
         
         
@@ -346,7 +346,7 @@ class Stock extends Component {
                 </Row>
                 <hr />
                 <Row>
-                    <Col lg="7">
+                    <Col lg="8">
                         <h5> Liste des produits </h5>
                             <Button color="success"  onClick={this.showModal.bind(this, 'modalNewProduct')}><img src={plus} className="NewUser"/> Nouveau produit</Button>{' '}
                             <Table className="Table">
@@ -373,7 +373,7 @@ class Stock extends Component {
                             </Table>
                     </Col>
                     
-                    <Col lg="5">
+                    <Col lg="4">
                         <h5> Liste des catégories </h5>
                             <Button color="success"><img src={plus} className="NewUser"/> Nouvelle catégorie produit</Button>{' '}
                             <Table className="Table">
