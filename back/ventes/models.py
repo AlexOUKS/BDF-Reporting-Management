@@ -31,7 +31,15 @@ class Vente(models.Model):
     amount = models.FloatField()
 
 
-
+def Vente_to_json(self):
+    return {
+        "dateVente": self.dateVente.strftime("%Y-%m-%d %H:%M:%S"),
+        "produit" : self.idProduit.name,
+        "lieuDeVie" : self.idLieuDeVie.name,
+        "selledBy" : self.selledBy,
+        "purchaseBy" : self.purchaseBy,
+        "amount" : self.amount
+    }
 
 
 
