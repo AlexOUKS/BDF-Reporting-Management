@@ -2,11 +2,26 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse, HttpResponseNotAllowed, HttpResponseBadRequest
 from ventes.models import *
 from validators.validators import Validators
+from ventes_temp.models import *
 
 import unicodedata
 
 import hashlib, datetime, json, string, random
 
+listVenteLoaded = []
+listVenteTempLoaded = []
+
+def uploadVenteLoaded():
+    if listVenteLoaded.count() == 0:
+        for vente in listVenteLoaded:
+            vente.save()
+        listVenteLoaded.clear()
+
+def uploadVenteTempLoaded():
+    if listVenteTempLoaded.count() == 0:
+        for vente in listVenteTempLoaded:
+            vente.save()
+            listVenteTempLoaded.clear()
 
 
 
@@ -49,6 +64,7 @@ def load(request):
 
 
             for line in file.readlines():# on balaye tout les lignes du fichier puis on fait les requetes necessaire au remplissage de la BDD
+
                 line2 = line.decode('utf-8')
                 line3 = line2.split(';')
                 produit = Produit()
@@ -72,7 +88,7 @@ def load(request):
                     lieuDeVie = lieuDeVieExist[0]
                 else:
                     #print("existe pas")
-                    lieuDeVie = ventes_temp.models.LieuDeVie()
+                    lieuDeVie = ventes_temp.models.LieuDeVieTemp()
                     lieuDeVie.save()
 
                 vente = Vente()
@@ -81,9 +97,25 @@ def load(request):
                 vente.idLieuDeVie = lieuDeVie
                 vente.selledBy = line3[2].replace('\"', "")
                 vente.purchaseBy = line3[3].replace('\"', "")
-                vente.pruchaseBy = line3[5].replace('\"', "")
+                vente.quantite = line3[5].replace('\"', "")
                 vente.amount = line3[6].replace('\"', "")
-                #vente.save()
+                venteExist = Vente.objects.filter(dateVente = vente.dateVente)
+                if Validators.is_not_empty(venteExist):
+                    print("vente existe")
+                    print(vente.dateVente)
+                    ventetemp = VenteTemp()
+                    ventetemp.dateVente = vente.dateVente
+                    ventetemp.idProduit = vente.idProduit
+                    ventetemp.idLieuDeVie = vente.idLieuDeVie
+                    ventetemp.selledBy = vente.selledBy
+                    ventetemp.purchaseBy = vente.purchaseBy
+                    ventetemp.pruchaseBy = vente.dateVente
+                    ventetemp.amount = vente.amount
+                    ventetemp.quantite = vente.quantite
+                    ventetemp.save()
+                else :
+                    print("vente existe pas")
+                    vente.save()
 
             return HttpResponse(vente)
         else :

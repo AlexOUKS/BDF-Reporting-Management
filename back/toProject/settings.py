@@ -50,6 +50,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'authBDF.apps.AuthbdfConfig',
     'ventes.apps.VentesConfig',
+    'ventes_temp.apps.VentesTempConfig',
     'stock.apps.StockConfig',
     'django.contrib.admin',
     'django.contrib.auth',

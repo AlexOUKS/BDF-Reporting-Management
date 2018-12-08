@@ -29,6 +29,7 @@ class Vente(models.Model):
     selledBy = models.CharField(max_length = 300)
     purchaseBy = models.CharField(max_length = 300)
     amount = models.FloatField()
+    quantite = models.IntegerField(default=1)
 
 
 def Vente_to_json(self):

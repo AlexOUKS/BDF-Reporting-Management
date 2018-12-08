@@ -23,20 +23,22 @@ class LieuDeVieTemp(models.Model):
 class VenteTemp(models.Model):
     id = models.AutoField(primary_key = True)
     dateVente = models.DateTimeField()
-    idProduit = models.ForeignKey(Produit, on_delete = models.CASCADE)
-    idLieuDeVie = models.ForeignKey(LieuDeVie, on_delete = models.CASCADE)
+    idProduit = models.ForeignKey(ProduitTemp, on_delete = models.CASCADE)
+    idLieuDeVie = models.ForeignKey(LieuDeVieTemp, on_delete = models.CASCADE)
     alt = models.CharField(max_length=30)
     selledBy = models.CharField(max_length = 300)
     purchaseBy = models.CharField(max_length = 300)
     amount = models.FloatField()
+    quantite = models.IntegerField(default=1)
 
 
-def Vente_to_json(self):
+def VenteTemp_to_json(self):
     return {
         "dateVente": self.dateVente.strftime("%Y-%m-%d %H:%M:%S"),
         "produit" : self.idProduit.name,
         "lieuDeVie" : self.idLieuDeVie.name,
         "selledBy" : self.selledBy,
         "purchaseBy" : self.purchaseBy,
-        "amount" : self.amount
+        "amount" : self.amount,
+        "quantite" : self.quantite
     }
