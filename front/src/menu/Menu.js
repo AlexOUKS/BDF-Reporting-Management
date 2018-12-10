@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import NewUser from '../newUser/NewUser';
 import Stock from '../stock/Stock';
 import Vente from '../vente/Vente';
+import Reporting from '../reporting/Reporting';
 import reporting from './img/increasing-stocks-graphic.svg';
 import user from './img/user.svg';
 import stock from './img/box.svg';
@@ -30,8 +31,9 @@ class Menu extends Component {
 
     display(menu) {
         switch (menu) {
-            case "vente":
-                this.setState({display : <Vente />});
+            case "reporting":
+                this.setState({display : <Reporting />});
+
             break;
             case "stock":
                 this.setState({display : <Stock action={this.handler} />});
@@ -57,7 +59,7 @@ class Menu extends Component {
                             <img className="ImgLogo2" src={logo} />
                         </div>
                         <ul className="MenuList">
-                            <li onClick={this.display.bind(this,"vente")}>
+                            <li onClick={this.display.bind(this,"reporting")}>
                                 <img src={reporting} />
                                 <span> Reporting des ventes </span>
                             </li>

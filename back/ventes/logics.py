@@ -2,26 +2,19 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse, HttpResponseNotAllowed, HttpResponseBadRequest
 from ventes.models import *
 from validators.validators import Validators
-from ventes_temp.models import *
+
+import json
 
 import unicodedata
 
 import hashlib, datetime, json, string, random
 
-listVenteLoaded = []
-listVenteTempLoaded = []
+listVenteAlreadyExist = []
+listNewProduct = []
 
-def uploadVenteLoaded():
-    if listVenteLoaded.count() == 0:
-        for vente in listVenteLoaded:
-            vente.save()
-        listVenteLoaded.clear()
 
-def uploadVenteTempLoaded():
-    if listVenteTempLoaded.count() == 0:
-        for vente in listVenteTempLoaded:
-            vente.save()
-            listVenteTempLoaded.clear()
+
+
 
 
 
@@ -32,12 +25,14 @@ def load(request):
             file = request.FILES["file"]
             print("c'est un file")
         except Exception as error:
-            print(request.FILES["file"].content_type)
+
             print("c'est pas un file")
             return HttpResponseBadRequest(error)
+        print(file.content_type)
+        print(file)
 
 
-        if(file.content_type == 'text/csv'): # Verification du type de fichier
+        if(file.content_type == 'application/vnd.ms-excel'): # Verification du type de fichier
             print("c'est une csv")
             firstLine = file.readline().decode('utf-8')
             secondLine = file.readline().decode('utf-8')
@@ -62,7 +57,7 @@ def load(request):
                 i+=1
 
 
-
+            o = 3
             for line in file.readlines():# on balaye tout les lignes du fichier puis on fait les requetes necessaire au remplissage de la BDD
 
                 line2 = line.decode('utf-8')
@@ -78,6 +73,7 @@ def load(request):
                     produit.prixAchat = line3[-2].replace('\"', "")
                     produit.prixVente = line3[-3].replace('\"', "")
                     produit.save()
+                    listNewProduct.append(produit)
 
                 lieuDeVie = LieuDeVie()
                 lieuDeVie.nom = line3[1].replace('\"', "")
@@ -101,24 +97,21 @@ def load(request):
                 vente.amount = line3[6].replace('\"', "")
                 venteExist = Vente.objects.filter(dateVente = vente.dateVente)
                 if Validators.is_not_empty(venteExist):
-                    print("vente existe")
-                    print(vente.dateVente)
-                    ventetemp = VenteTemp()
-                    ventetemp.dateVente = vente.dateVente
-                    ventetemp.idProduit = vente.idProduit
-                    ventetemp.idLieuDeVie = vente.idLieuDeVie
-                    ventetemp.selledBy = vente.selledBy
-                    ventetemp.purchaseBy = vente.purchaseBy
-                    ventetemp.pruchaseBy = vente.dateVente
-                    ventetemp.amount = vente.amount
-                    ventetemp.quantite = vente.quantite
-                    ventetemp.save()
+                    print(o)
+                    listVenteAlreadyExist.append(Vente_to_json(vente))
+
                 else :
                     print("vente existe pas")
                     vente.save()
+                o += 1
+            reponse = JsonResponse(listVenteAlreadyExist,safe=False)
 
-            return HttpResponse(vente)
+            for d in listVenteAlreadyExist:
+                listVenteAlreadyExist.remove(d)
+
+            return reponse
         else :
+            print("c'est pas une csv")
             return HttpResponseBadRequest("Fichier incompatible ! Veuillez upload un fichier CSV")
 
 
@@ -134,3 +127,31 @@ def GetVentes(request):
 
     else:
         return HttpResponseForbidden("Demande refusée")
+
+
+def getVenteDF(request):
+    reponse = []
+    if(request.method == "POST"):
+
+
+        data = Validators.is_valid_json(request.body)
+
+        if data == False:
+            print("data false")
+            return HttpResponseBadRequest("Probleme data")
+        else:
+            dateDebut = data["DateDebut"]
+            dateFin = data["DateFin"]
+            print(dateDebut, dateFin)
+            allVente = Vente.objects.all()
+            for vente in allVente:
+                if dateDebut <= vente.dateVente <= dateFin :
+                    reponse.append(Vente_to_json(vente))
+
+
+
+
+        return JsonResponse(reponse, safe= False)
+    else:
+        print("pas un get")
+        return HttpResponseBadRequest("Mauvaise requête")

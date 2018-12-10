@@ -22,7 +22,7 @@ class LieuDeVie(models.Model):
 
 class Vente(models.Model):
     id = models.AutoField(primary_key = True)
-    dateVente = models.DateTimeField()
+    dateVente = models.CharField(max_length = 300)
     idProduit = models.ForeignKey(Produit, on_delete = models.CASCADE)
     idLieuDeVie = models.ForeignKey(LieuDeVie, on_delete = models.CASCADE)
     alt = models.CharField(max_length=30)
@@ -34,12 +34,13 @@ class Vente(models.Model):
 
 def Vente_to_json(self):
     return {
-        "dateVente": self.dateVente.strftime("%Y-%m-%d %H:%M:%S"),
-        "produit" : self.idProduit.name,
-        "lieuDeVie" : self.idLieuDeVie.name,
+        "dateVente": self.dateVente,
+        "produit" : self.idProduit.nom,
+        "lieuDeVie" : self.idLieuDeVie.nom,
         "selledBy" : self.selledBy,
         "purchaseBy" : self.purchaseBy,
-        "amount" : self.amount
+        "amount" : self.amount,
+        "quantité" : self.quantite
     }
 
 

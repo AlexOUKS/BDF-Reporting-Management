@@ -22,14 +22,6 @@ class Vente extends Component {
 
 
 componentDidMount() {
-        axios.get(process.env.REACT_APP_API_URL+'/authBDF/getVentes',
-        )
-            .then(res =>  {
-                const ventes = res.data;
-                this.setState({ ventes });
-                this.showVentes();
-              });
-
 
     }
 
@@ -53,18 +45,49 @@ componentDidMount() {
         }
 
                 ).then(res => {
+                    const ventes = res.data
+                    this.setState({ventes});
+
+                    if (this.state.ventes.lenght !=0 ){
+
+
+                        this.showVentes();
+                    }
+
+
+
 
       })
 
   }
+  showTableColumn(){
+    let table = []
+      if (this.state.ventes.lenght !=0 ) {
+          if (Validators.isDefined(this.state.ventes)) {
+              table.push(
+                  <tr>
+                      <th>Date de vente</th>
+                      <th>Produit</th>
+                      <th>Lieu de vie</th>
+                      <th>Vendu par</th>
+                      <th>acheté par</th>
+                      <th>total</th>
+                  </tr>);
+          }
+      }
+      return table;
+
+}
+
+
 
   showVentes() {
 
         let table = []
 
-        if (Validators.isDefined(this.state.ventes.data)) {
-            for (let i=0; i < Object.keys(this.state.ventes.data).length; i++) {
-                let vente = this.state.ventes.data[i];
+        if (Validators.isDefined(this.state.ventes)) {
+            for (let i=0; i < Object.keys(this.state.ventes).length; i++) {
+                let vente = this.state.ventes[i];
                 table.push(
                     <tr>
                         <td> {vente.dateVente} </td>
@@ -78,6 +101,7 @@ componentDidMount() {
 
             }
         }
+        return table
 }
 
 
@@ -96,14 +120,7 @@ componentDidMount() {
                         <Card>
                         <Table className="Table">
                             <thead>
-                            <tr>
-                                <th>Date de vente</th>
-                                <th>Produit</th>
-                                <th>Lieu de vie</th>
-                                <th>Vendu par </th>
-                                <th>acheté par</th>
-                                <th>total</th>
-                            </tr>
+                             {this.showTableColumn()}
                             </thead>
                             <tbody>
 

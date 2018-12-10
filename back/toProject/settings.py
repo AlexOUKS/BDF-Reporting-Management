@@ -18,7 +18,7 @@ os.environ["DATABASE_HOST"] = "localhost"
 os.environ["DATABASE_PORT"] = "5432"
 os.environ["DATABASE_NAME"] = "bdf"
 os.environ["DATABASE_USER"] = "postgres"
-os.environ["DATABASE_PASSWORD"] = " "
+os.environ["DATABASE_PASSWORD"] = "admin"
 
 
 def get_env_variable(var_name):
@@ -50,7 +50,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'authBDF.apps.AuthbdfConfig',
     'ventes.apps.VentesConfig',
-    'ventes_temp.apps.VentesTempConfig',
+
     'stock.apps.StockConfig',
     'django.contrib.admin',
     'django.contrib.auth',
