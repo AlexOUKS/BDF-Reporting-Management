@@ -43,6 +43,14 @@ class Menu extends Component {
     // ----------------------- VUE HTML -----------------------------
 
     render() {
+        let users = ""
+        if (sessionStorage.getItem("lvl") == "1") {
+            users = <li className="CreationCompte" onClick={this.display.bind(this,"user")}>
+                        <img src={user} />
+                        <a><span> Gestion utilisateurs </span></a>
+                    </li>;
+        } 
+        
         return (
             <div className="Page"> 
                 <div className="MenuNav">
@@ -58,10 +66,8 @@ class Menu extends Component {
                                 <img src={stock} />
                                 <span> Gestion des stocks </span>
                             </li>
-                            <li className="CreationCompte" onClick={this.display.bind(this,"user")}>
-                                <img src={user} />
-                                <a><span> Gestion utilisateurs </span></a>
-                            </li>
+                            
+                            {users}
                         </ul>
                 </div>
                 <div id="MainBlock">

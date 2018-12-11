@@ -34,6 +34,7 @@ def newProduit(request):
             nom = data["nom"]
             prixAchat = data["prixAchat"]
             prixVente = data["prixVente"]
+            quantite = data["quantite"]
             disponible = data["disponible"]
 
             produitExist = Produit.objects.filter(nom=nom)
@@ -42,12 +43,8 @@ def newProduit(request):
                 return HttpResponseBadRequest("Produit déjà existant")
             
             if Validators.is_not_empty(categorieProduit):
-                try:
-                    int(categorieProduit)
-                except ValueError:
-                    return HttpResponseBadRequest("Catégorie de produit doit être une clé primaire et un entier")
-
-                categorieProduitExist = CategorieProduit.objects.filter(pk=categorieProduit)
+            
+                categorieProduitExist = CategorieProduit.objects.filter(nom=categorieProduit)
 
                 if Validators.is_not_empty(categorieProduitExist) == False:
                     return HttpResponseBadRequest("Catégorie de produit non existante")
@@ -57,10 +54,11 @@ def newProduit(request):
             else:
                 return HttpResponseBadRequest("Champ catégorie produit vide")
 
-            if Validators.is_not_empty(nom) & Validators.is_not_empty(prixAchat) & Validators.is_not_empty(prixVente) & Validators.is_not_empty(disponible):
+            if Validators.is_not_empty(nom) & Validators.is_not_empty(prixAchat) & Validators.is_not_empty(prixVente) & Validators.is_not_empty(disponible) & Validators.is_not_empty(quantite):
                 produit.nom = nom
                 produit.prixAchat = prixAchat
                 produit.prixVente = prixVente
+                produit.quantite = quantite
                 produit.alt = nom.lower()
                 if (disponible.lower() == "false"):
                     produit.disponible = False
@@ -102,6 +100,7 @@ def editProduit(request):
             prixAchat = data["prixAchat"]
             prixVente = data["prixVente"]
             disponible = data["disponible"]
+            quantite = data["quantite"]
 
             produit = Produit.objects.filter(pk=id)
             
@@ -111,12 +110,8 @@ def editProduit(request):
             produit = produit[0]
 
             if Validators.is_not_empty(categorieProduit):
-                try:
-                    int(categorieProduit)
-                except ValueError:
-                    return HttpResponseBadRequest("Catégorie de produit doit être une clé primaire et un entier")
 
-                categorieProduitExist = CategorieProduit.objects.filter(pk=categorieProduit)
+                categorieProduitExist = CategorieProduit.objects.filter(nom=categorieProduit)
 
                 if Validators.is_not_empty(categorieProduitExist) == False:
                     return HttpResponseBadRequest("Catégorie de produit non existante")
@@ -126,10 +121,12 @@ def editProduit(request):
             else:
                 return HttpResponseBadRequest("Champ catégorie produit vide")
 
-            if Validators.is_not_empty(nom) & Validators.is_not_empty(prixAchat) & Validators.is_not_empty(prixVente) & Validators.is_not_empty(disponible):
+            if Validators.is_not_empty(nom) & Validators.is_not_empty(prixAchat) & Validators.is_not_empty(prixVente) & Validators.is_not_empty(disponible) & Validators.is_not_empty(quantite):
                 produit.nom = nom
                 produit.prixAchat = prixAchat
                 produit.prixVente = prixVente
+                produit.quantite = quantite
+
                 produit.alt = nom.lower()
                 if (disponible.lower() == "false"):
                     produit.disponible = False
@@ -176,3 +173,113 @@ def deleteProduit(request):
             return HttpResponseBadRequest("Vous n'avez pas mis de corps à votre requête")
      
     return HttpResponseForbidden("Accès refusé")
+
+def deleteCategorieProduit(request):
+
+    if (request.method == "DELETE"):
+        if Validators.is_not_empty(request.body):
+            data = Validators.is_valid_json(request.body)
+            if data == False:
+                return HttpResponseBadRequest("Le JSON dans le corps de votre requête est mal formaté")
+            
+            fields = ["id"]
+            errors = Validators.keys_are_inside_arrays(data, fields)
+            
+            if Validators.is_type(errors, list):
+                return HttpResponseBadRequest("Champs manquants : " + json.dumps(errors))
+            
+            id = data["id"]
+
+            categorieProduit = CategorieProduit.objects.filter(pk=id)
+            
+            if not Validators.is_not_empty(categorieProduit):
+                return HttpResponseBadRequest("Catégorie non existante")
+                
+            categorieProduit[0].delete()
+
+            return JsonResponse({'etat' : "Catégorie supprimée"})
+        else:
+            return HttpResponseBadRequest("Vous n'avez pas mis de corps à votre requête")
+    
+    return HttpResponseForbidden("Accès refusé")
+
+def newCategorieProduit(request):
+
+    if (request.method == "POST"):
+        if Validators.is_not_empty(request.body):   
+
+            data = Validators.is_valid_json(request.body)
+            if data == False:
+                return HttpResponseBadRequest("Le JSON dans le corps de votre requête est mal formaté")
+            
+            fields = ["nom", "colorGraph"]
+            errors = Validators.keys_are_inside_arrays(data, fields)
+            
+            if Validators.is_type(errors, list):
+                return HttpResponseBadRequest("Champs manquants : " + json.dumps(errors))
+            
+
+            nom = data["nom"]
+            colorGraph = data["colorGraph"]
+
+            categorieProduitExist = CategorieProduit.objects.filter(nom=nom)
+            
+            if Validators.is_not_empty(categorieProduitExist):
+                return HttpResponseBadRequest("Produit déjà existant")
+        
+            categorie = CategorieProduit()
+
+            if Validators.is_not_empty(nom) & Validators.is_not_empty(colorGraph):
+                categorie.nom = nom
+                categorie.colorGraph = colorGraph
+            else:
+                return HttpResponseBadRequest("Un des champs est vide")
+            
+            categorie.save()
+
+            return JsonResponse({'etat' : "Categorie de produit créé"})
+        else:
+            return HttpResponseBadRequest("Vous n'avez pas mis de corps à votre requête")
+
+    return HttpResponseForbidden("Accès refusé")
+
+def editCategorieProduit(request):
+    
+    if (request.method == "PUT"):
+        if Validators.is_not_empty(request.body):
+            data = Validators.is_valid_json(request.body)
+            if data == False:
+                return HttpResponseBadRequest("Le JSON dans le corps de votre requête est mal formaté")
+            
+            fields = ["id", "nom", "colorGraph"]
+            errors = Validators.keys_are_inside_arrays(data, fields)
+            
+            if Validators.is_type(errors, list):
+                return HttpResponseBadRequest("Champs manquants : " + json.dumps(errors))
+            
+            categorie = CategorieProduit()
+
+            id = data["id"]
+            nom = data["nom"]
+            colorGraph = data["colorGraph"]
+
+            categorie = CategorieProduit.objects.filter(pk=id)
+            
+            if not Validators.is_not_empty(categorie):
+                return HttpResponseBadRequest("Categorie non existante")
+
+            categorie = categorie[0]
+
+            if Validators.is_not_empty(nom) & Validators.is_not_empty(colorGraph):
+                categorie.nom = nom
+                categorie.colorGraph = colorGraph
+            else:
+                return HttpResponseBadRequest("Un des champs est vide")
+
+            categorie.save()
+
+            return JsonResponse({'etat' : "Categorie modifiée"})
+        else:
+            return HttpResponseBadRequest("Vous n'avez pas mis de corps à votre requête")
+    else:
+        return HttpResponseForbidden("Accès refusé")

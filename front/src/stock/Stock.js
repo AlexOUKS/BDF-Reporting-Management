@@ -23,6 +23,7 @@ class Stock extends Component {
             dataBar : {},
             optionsBar : {},
             categoriesSelect : [],
+
             modalNewProduct: false,
             modalEditProduct: false,
             modalDeleteProduct: false,
@@ -33,10 +34,17 @@ class Stock extends Component {
             prixVente : "",
             quantite : "",
             disponible : "",
-            
-        
+
+            modalNewCategorie: false,
+            modalEditCategorie: false,
+            modalDeleteCategorie: false,
+            currentCategorie : {},
+
+            nomCategorie : "",
+            colorGraph : "",
         }
 
+        this.createCategorieProduit = this.createCategorieProduit.bind(this);
         this.createProduit = this.createProduit.bind(this);
         this.changeCategorieProduct = this.changeCategorieProduct.bind(this);
         this.changeShowProducts = this.changeShowProducts.bind(this);
@@ -55,7 +63,7 @@ class Stock extends Component {
                 this.setState({ products : products });
                 this.showProducts();
                 this.countCategories();
-                this.showProductsBar("Alimentaire");
+                this.showProductsBar(this.state.products.data[0].categorieProduit.nom);
               });
         
         
@@ -98,8 +106,8 @@ class Stock extends Component {
                             <td> {dispoimg} </td>
                             <td> {product.quantite} </td>
                             <td> 
-                                <Button color="warning"><img src={modify} /></Button>{' '}
-                                <Button color="danger"><img src={deleteimg} /></Button>{' '}
+                                <Button color="warning" onClick={this.showModal.bind(this, 'modalEditProduct', product)}><img src={modify} /></Button>{' '}
+                                <Button color="danger" onClick={this.showModal.bind(this, 'modalDeleteProduct', product)}><img src={deleteimg} /></Button>{' '}
                             </td>  
                         </tr>);
                     
@@ -170,12 +178,14 @@ class Stock extends Component {
         this.setState({
             [tabId]: false
         });
+        console.log(this.state.modalEditProduct)
     }
 
     showModal(modal, product) {
         this.setState({
             [modal]: true,
-            "currentProduct" : product
+            "currentProduct" : product,
+            "currentCategorie" : product
         });
     }
 
@@ -197,19 +207,18 @@ class Stock extends Component {
             "disponible" : this.state.disponible
         }
         
-        let inputs = document.querySelectorAll('inputNewProduct');
+        let inputs = document.querySelectorAll('select, input, div');
         for (let index = 0; index < inputs.length; ++index) {
             inputs[index].classList.remove("error-input");
         }
 
-        console.log(isValid);
  
         let isValid = Validators.fields_not_empty(fields);
 
         if (isValid === true) {
             axios.post(process.env.REACT_APP_API_URL+'/stock/newProduit', 
                 {
-                    "nomProduit" : this.state.nomProduit,
+                    "nom" : this.state.nomProduit,
                     "categorieProduit" : this.state.categorieProduit,
                     "prixAchat" : this.state.prixAchat,
                     "prixVente" : this.state.prixVente,
@@ -224,20 +233,196 @@ class Stock extends Component {
                 } 
                 )
                 .then(r => {
-                    this.closeModal("modalNewUser");
-                    // A changer si possible, mauvaise méthode..
-                    //eslint-disable-next-line
-                    window.location.reload();
+                    this.closeModal('modalNewProduct');
+                    this.componentDidMount();
                 })
                 .catch((r) => {alert("Le produit est déjà existant")});
             
         } else {
+            
             for (var key in isValid) {
-                key.classList.add("error-input");
+                document.getElementById(isValid[key]).classList.add("error-input");
             }
         }
     }
-    
+
+    editProduct(id) {
+        let fields = {
+            "nomProduit" : document.getElementById("nomProduit").value,
+            "categorieProduit" : document.getElementById("categorieProduit").value,
+            "prixAchat" : document.getElementById("prixAchat").value,
+            "prixVente" : document.getElementById("prixVente").value,
+            "quantite" : document.getElementById("quantite").value,
+            "disponible" : document.getElementById("disponible").value
+        }
+        
+        let inputs = document.querySelectorAll('select, input, div');
+        for (let index = 0; index < inputs.length; ++index) {
+            inputs[index].classList.remove("error-input");
+        }
+
+ 
+        let isValid = Validators.fields_not_empty(fields);
+
+        if (isValid === true) {
+            axios.put(process.env.REACT_APP_API_URL+'/stock/editProduit', 
+                {
+                    "id" : id,
+                    "nom" : document.getElementById("nomProduit").value,
+                    "categorieProduit" : document.getElementById("categorieProduit").value,
+                    "prixAchat" : document.getElementById("prixAchat").value,
+                    "prixVente" : document.getElementById("prixVente").value,
+                    "quantite" : document.getElementById("quantite").value,
+                    "disponible" : document.querySelector('input[name="disponible"]:checked').value
+                },
+                {
+                    headers : {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'authtoken' : sessionStorage.getItem('token')
+                    }
+                } 
+                )
+                .then(r => {
+                    this.closeModal('modalEditProduct');
+                    this.componentDidMount();
+                    
+                })
+                .catch((r) => {alert("Le produit n'existe pas")});
+            
+        } else {
+            
+            for (var key in isValid) {
+                document.getElementById(isValid[key]).classList.add("error-input");
+            }
+        }
+    }
+
+    editProduct(id) {
+        let fields = {
+            "nomCategorie" : document.getElementById("nomCategorie").value,
+            "colorGraph" : document.getElementById("colorGraph").value,
+        }
+        
+        let inputs = document.querySelectorAll('select, input, div');
+        for (let index = 0; index < inputs.length; ++index) {
+            inputs[index].classList.remove("error-input");
+        }
+
+ 
+        let isValid = Validators.fields_not_empty(fields);
+
+        if (isValid === true) {
+            axios.put(process.env.REACT_APP_API_URL+'/stock/editCategorieProduit', 
+                {
+                    "id" : id,
+                    "nom" : document.getElementById("nomCategorie").value,
+                    "colorGraph" : document.getElementById("colorGraph").value,
+                },
+                {
+                    headers : {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'authtoken' : sessionStorage.getItem('token')
+                    }
+                } 
+                )
+                .then(r => {
+                    this.closeModal('modalEditCategorie');
+                    this.componentDidMount();
+                    
+                })
+                .catch((r) => {alert("La catégorie de produit n'existe pas")});
+            
+        } else {
+            
+            for (var key in isValid) {
+                document.getElementById(isValid[key]).classList.add("error-input");
+            }
+        }
+    }
+
+    createCategorieProduit() {
+
+        let fields = {
+            "nomCategorie" : this.state.nomCategorie,
+            "colorGraph" : this.state.colorGraph,
+        }
+        
+        let inputs = document.querySelectorAll('select, input, div');
+        for (let index = 0; index < inputs.length; ++index) {
+            inputs[index].classList.remove("error-input");
+        }
+
+ 
+        let isValid = Validators.fields_not_empty(fields);
+
+        if (isValid === true) {
+            axios.post(process.env.REACT_APP_API_URL+'/stock/newCategorieProduit', 
+                {
+                    "nom" : this.state.nomCategorie,
+                    "colorGraph" : this.state.colorGraph,
+                },
+                {
+                    headers : {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'authtoken' : sessionStorage.getItem('token')
+                    }
+                } 
+                )
+                .then(r => {
+                    this.closeModal('modalNewCategorie');
+                    this.componentDidMount();
+                })
+                .catch((r) => {alert("La catégorie est déjà existante")});
+            
+        } else {
+            
+            for (var key in isValid) {
+                document.getElementById(isValid[key]).classList.add("error-input");
+            }
+        }
+    }
+
+    deleteProduit(id) {
+        axios.delete(process.env.REACT_APP_API_URL+'/stock/deleteProduit', 
+                {   data :     
+                    {
+                        'id' : id,
+                    },
+                    headers : {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'authtoken' : sessionStorage.getItem('token')
+                    }
+                },
+
+                )
+            .then(r => {
+                this.closeModal("modalDeleteProduct");
+                this.componentDidMount();
+            })
+            .catch((r) => {alert("Le produit n'existe pas")}); 
+    }
+
+
+    deleteCategorieProduit(id) {
+        axios.delete(process.env.REACT_APP_API_URL+'/stock/deleteCategorieProduit', 
+                {   data :     
+                    {
+                        'id' : id,
+                    },
+                    headers : {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'authtoken' : sessionStorage.getItem('token')
+                    }
+                },
+
+                )
+            .then(r => {
+                this.closeModal("modalDeleteCategorie");
+                this.componentDidMount();
+            })
+            .catch((r) => {alert("La catégorie de produit n'existe pas")}); 
+    }
+
     countCategories() {
         let categoriesSelect = []
         let categories = []
@@ -254,10 +439,9 @@ class Stock extends Component {
                 colors.push(product.categorieProduit.colorGraph);
                 categorieList.push(<tr>
                     <td> {product.categorieProduit.nom} </td>
-                    <td> {product.categorieProduit.colorGraph} </td>
                     <td> 
-                        <Button color="warning"><img src={modify} /></Button>{' '}
-                        <Button color="danger"><img src={deleteimg} /></Button>{' '}
+                        <Button color="warning" onClick={this.showModal.bind(this, 'modalEditCategorie', product.categorieProduit)}><img src={modify} /></Button>{' '}
+                        <Button color="danger" onClick={this.showModal.bind(this, 'modalDeleteCategorie', product.categorieProduit)}><img src={deleteimg} /></Button>{' '}
                     </td>                 
                 </tr>);
                 categoriesSelect.push(
@@ -375,14 +559,13 @@ class Stock extends Component {
                     
                     <Col lg="4">
                         <h5> Liste des catégories </h5>
-                            <Button color="success"><img src={plus} className="NewUser"/> Nouvelle catégorie produit</Button>{' '}
+                            <Button color="success" onClick={this.showModal.bind(this, 'modalNewCategorie')}><img src={plus}  className="NewUser"/> Nouvelle catégorie produit</Button>{' '}
                             <Table className="Table">
                                 
                                 <thead>
                                 
                                 <tr>
                                     <th>Nom catégorie</th>
-                                    <th>Couleur catégorie</th>
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
@@ -404,30 +587,31 @@ class Stock extends Component {
                     <ModalBody>
                         <FormGroup>
                             <label>Nom du produit</label>
-                            <Input onChange={evt => this.getValues(evt, 'nomProduit')} placeholder="Nom du produit" className="inputNewProduct"/>
+                            <Input onChange={evt => this.getValues(evt, 'nomProduit')} placeholder="Nom du produit" id="nomProduit"/>
                         </FormGroup>
                         
                         <FormGroup>
                             <label>Catégorie de produit</label>
-                            <Input type="select" onChange={evt => this.getValues(evt, 'categorieProduit')} bsSize="sm" className="inputNewProduct">
+                            <Input type="select" onChange={evt => this.getValues(evt, 'categorieProduit')} bsSize="sm" id="categorieProduit">
+                                <option selected value="">Catégorie de produit</option>
                                 {this.state.categoriesSelect}
                             </Input>
                         </FormGroup>
                         <FormGroup>
                             <label>Prix d'achat</label>
-                            <Input type="number" onChange={evt => this.getValues(evt, 'prixAchat')} placeholder="Prix d'achat" className="inputNewProduct"/>
+                            <Input type="number" onChange={evt => this.getValues(evt, 'prixAchat')} placeholder="Prix d'achat" id="prixAchat"/>
                         </FormGroup>
                         <FormGroup>
                             <label>Prix de vente</label>
-                            <Input type="number" onChange={evt => this.getValues(evt, 'prixVente')}placeholder="Prix de vente"  className="inputNewProduct"/>
+                            <Input type="number" onChange={evt => this.getValues(evt, 'prixVente')}placeholder="Prix de vente"  id="prixVente"/>
                         </FormGroup>
                         <FormGroup>
                             <label>Quantité</label>
-                            <Input type="number"onChange={evt => this.getValues(evt, 'quantite')}  placeholder="Quantité" className="inputNewProduct"/>
+                            <Input type="number"onChange={evt => this.getValues(evt, 'quantite')}  placeholder="Quantité" id="quantite"/>
                         </FormGroup>
                         <FormGroup>
                             <label>Disponible</label>
-                            <div onChange={evt => this.getValues(evt, 'disponible')}>
+                            <div onChange={evt => this.getValues(evt, 'disponible')} id="disponible">
                                 <input type="radio" value="True" name="disponible"/> <img src={notdispo}  className="SmallImg"/>
                                 <input type="radio" value="False" name="disponible"/> <img src={dispo} className="SmallImg" /> 
                             </div>
@@ -445,36 +629,39 @@ class Stock extends Component {
                             Éditer le produit <b>{this.state.currentProduct.nom}</b>
                     </ModalHeader>
                     <ModalBody>
-                        <FormGroup>
+                    <FormGroup>
                             <label>Nom du produit</label>
-                            <Input onChange={evt => this.getValues(evt, 'nomProduit')} value={this.state.currentProduct.nom} placeholder="Nom du produit"/>
+                            <Input onChange={evt => this.getValues(evt, 'nomProduit')} defaultValue={this.state.currentProduct.nom} placeholder="Nom du produit" id="nomProduit"/>
                         </FormGroup>
                         
                         <FormGroup>
                             <label>Catégorie de produit</label>
-                            <Input type="select" onChange={evt => this.getValues(evt, 'categorieProduit')} bsSize="sm">
+                            <Input type="select" onChange={evt => this.getValues(evt, 'categorieProduit')} selected={this.state.currentProduct.categorieProduit} bsSize="sm" id="categorieProduit">
                                 {this.state.categoriesSelect}
                             </Input>
                         </FormGroup>
                         <FormGroup>
                             <label>Prix d'achat</label>
-                            <Input type="number" placeholder="Prix d'achat" value={this.state.currentProduct.prixAchat}/>
+                            <Input type="number" onChange={evt => this.getValues(evt, 'prixAchat')} defaultValue={this.state.currentProduct.prixAchat} placeholder="Prix d'achat" id="prixAchat"/>
                         </FormGroup>
                         <FormGroup>
                             <label>Prix de vente</label>
-                            <Input type="number" placeholder="Prix de vente" value={this.state.currentProduct.prixVente}/>
+                            <Input type="number" onChange={evt => this.getValues(evt, 'prixVente')} defaultValue={this.state.currentProduct.prixVente} placeholder="Prix de vente"  id="prixVente"/>
                         </FormGroup>
                         <FormGroup>
                             <label>Quantité</label>
-                            <Input type="number" placeholder="Quantité" value={this.state.currentProduct.quantite}/>
+                            <Input type="number"onChange={evt => this.getValues(evt, 'quantite')} defaultValue={this.state.currentProduct.quantite} placeholder="Quantité" id="quantite"/>
                         </FormGroup>
                         <FormGroup>
-                            <label></label>
-                            <Input onChange={evt => this.getValues(evt, 'nomProduit')} value={this.state.currentProduct.nom} placeholder="Nom du produit"/>
+                            <label>Disponible</label>
+                            <div onChange={evt => this.getValues(evt, 'disponible')}>
+                                <input type="radio" value="False" onChange={() => this.state.currentProduct.disponible = !this.state.currentProduct.disponible} checked={this.state.currentProduct.disponible == false? true : false}  name="disponible" id="disponible"/> <img src={notdispo}  className="SmallImg"/>
+                                <input type="radio" value="True" onChange={() => this.state.currentProduct.disponible = !this.state.currentProduct.disponible} checked={this.state.currentProduct.disponible == true? true : false} name="disponible" id="disponible"/> <img src={dispo}  className="SmallImg" /> 
+                            </div>
                         </FormGroup>
                         
                         <ModalFooter>
-                            <Button color="success" className="SubmitButton" >Modifier</Button>
+                            <Button color="success" className="SubmitButton" onClick={this.editProduct.bind(this, this.state.currentProduct.id)}>Modifier</Button>
                             <Button color="warning" className="SubmitButton" onClick={this.closeModal.bind(this, 'modalEditProduct')}>Annuler</Button>
                         </ModalFooter>
                     </ModalBody>
@@ -486,11 +673,75 @@ class Stock extends Component {
                         Suppression d'un produit
                     </ModalHeader>
                     <ModalBody>
-                        Êtes-vous sur de supprimer l'utilisateur <b> {this.state.currentProduct.nom} </b> ?
+                        Êtes-vous sur de supprimer le produit <b> {this.state.currentProduct.nom} </b> ?
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="danger" className="SubmitButton" >Supprimer</Button>
+                        <Button color="danger" className="SubmitButton" onClick={this.deleteProduit.bind(this, this.state.currentProduct.id)} >Supprimer</Button>
                         <Button color="warning" className="SubmitButton" onClick={this.closeModal.bind(this, 'modalDeleteProduct')}>Annuler</Button>
+                    </ModalFooter>
+                    
+                </Modal>
+
+
+
+
+
+
+                <Modal isOpen={this.state.modalNewCategorie} toggle={this.closeModal.bind(this, 'modalNewCategorie')}>
+                    <ModalHeader toggle={this.closeModal.bind(this, 'modalNewCategorie')}>
+                            Nouvelle catégorie de produit <b>{this.state.currentCategorie.nom}</b>
+                    </ModalHeader>
+                    <ModalBody>
+                    <FormGroup>
+                            <label>Nom de la catégorie de produit</label>
+                            <Input onChange={evt => this.getValues(evt, 'nomCategorie')} placeholder="Nom de la catégorie" id="nomCategorie"/>
+                        </FormGroup>
+                        
+                        <FormGroup>
+                            <label>Couleur de la catégorie sur les graphiques</label>
+                            <Input type="color" onChange={evt => this.getValues(evt, 'colorGraph')} placeholder="Couleur graphique" id="colorGraph"/>
+                        </FormGroup>
+                        
+                        <ModalFooter>
+                            <Button color="success" className="SubmitButton" onClick={this.createCategorieProduit}>Creation</Button>
+                            <Button color="warning" className="SubmitButton" onClick={this.closeModal.bind(this, 'modalNewCategorie')}>Annuler</Button>
+                        </ModalFooter>
+                    </ModalBody>
+                </Modal>
+
+                <Modal isOpen={this.state.modalEditCategorie} toggle={this.closeModal.bind(this, 'modalEditCategorie')}>
+                    <ModalHeader toggle={this.closeModal.bind(this, 'modalEditCategorie')}>
+                            Éditer la catégorie de produit <b>{this.state.currentCategorie.nom}</b>
+                    </ModalHeader>
+                    <ModalBody>
+                    <FormGroup>
+                            <label>Nom de la catégorie de produit</label>
+                            <Input onChange={evt => this.getValues(evt, 'nomCategorie')} defaultValue={this.state.currentCategorie.nom} placeholder="Nom de la catégorie" id="nomCategorie"/>
+                        </FormGroup>
+                        
+                        <FormGroup>
+                            <label>Couleur de la catégorie sur les graphiques</label>
+                            <Input type="color" onChange={evt => this.getValues(evt, 'colorGraph')} defaultValue={this.state.currentCategorie.colorGraph} placeholder="Couleur graphique" id="colorGraph"/>
+                        </FormGroup>
+                        
+                        <ModalFooter>
+                            <Button color="success" className="SubmitButton" onClick={this.editProduct.bind(this, this.state.currentCategorie.id)}>Modifier</Button>
+                            <Button color="warning" className="SubmitButton" onClick={this.closeModal.bind(this, 'modalEditCategorie')}>Annuler</Button>
+                        </ModalFooter>
+                    </ModalBody>
+                </Modal>
+
+
+                <Modal isOpen={this.state.modalDeleteCategorie} toggle={this.closeModal.bind(this, 'modalDeleteCategorie')}>
+                    <ModalHeader toggle={this.closeModal.bind(this, 'modalDeleteCategorie')}>
+                        Suppression d'une catégorie de produit
+                    </ModalHeader>
+                    <ModalBody>
+                        Êtes-vous sur de supprimer la catégorie de produit <b> {this.state.currentCategorie.nom} </b> ?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="danger" className="SubmitButton" onClick={this.deleteCategorieProduit.bind(this, this.state.currentCategorie.id)} >Supprimer</Button>
+                        <Button color="warning" className="SubmitButton" onClick={this.closeModal.bind(this, 'modalDeleteCategorie')}>Annuler</Button>
                     </ModalFooter>
                     
                 </Modal>

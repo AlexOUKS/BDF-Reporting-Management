@@ -250,9 +250,6 @@ class NewUser extends Component {
                                 <option value="">Niveau d'authentification</option>
                                 <option>1</option>
                                 <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
                             </CustomInput>
                         </FormGroup>
                         <ModalFooter>
@@ -277,9 +274,6 @@ class NewUser extends Component {
                                 <option value="">Niveau d'authentification</option>
                                 <option>1</option>
                                 <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
                             </CustomInput>
                         </FormGroup>
                         <ModalFooter>
