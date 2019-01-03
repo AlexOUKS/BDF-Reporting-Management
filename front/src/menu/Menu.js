@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import NewUser from '../newUser/NewUser';
 import Stock from '../stock/Stock';
+import Vente from '../vente/Vente';
+import Reporting from '../reporting/Reporting';
 import reporting from './img/increasing-stocks-graphic.svg';
 import user from './img/user.svg';
 import stock from './img/box.svg';
 import logo from '../img/logo-couleur.png';
+
+
 
 import './Menu.css';
 
@@ -12,6 +16,7 @@ class Menu extends Component {
 
     constructor(props) {
         super(props);
+        this.handler = this.handler.bind(this);
         this.state = {
             display: <img src={logo} width="500px" />
         };
@@ -20,25 +25,29 @@ class Menu extends Component {
     
     }
 
+    handler() {
+        this.setState({display : <Vente />});
+    }
+
     display(menu) {
         switch (menu) {
-            case "ventes":
-                
-            break;
-            case "ventes":
-                
+            case "reporting":
+                this.setState({display : <Reporting />});
+
             break;
             case "stock":
-                this.setState({display : <Stock />});
+                this.setState({display : <Stock action={this.handler} />});
             break;
             case "user":
                 this.setState({display : <NewUser />});
             break;
-        
+
             default:
                 break;
         }
     }
+
+
     
     // ----------------------- VUE HTML -----------------------------
 
@@ -58,7 +67,7 @@ class Menu extends Component {
                             <img className="ImgLogo2" src={logo} />
                         </div>
                         <ul className="MenuList">
-                            <li onClick={this.display.bind(this,"ventes")}>
+                            <li onClick={this.display.bind(this,"reporting")}>
                                 <img src={reporting} />
                                 <span> Reporting des ventes </span>
                             </li>

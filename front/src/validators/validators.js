@@ -1,3 +1,7 @@
+import Stock from "../stock/Stock";
+import NewUser from "../newUser/NewUser";
+import Vente from "../vente/Vente";
+
 class Validators {
 
     static isDefined(value) {

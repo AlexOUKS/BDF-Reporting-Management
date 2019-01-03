@@ -10,6 +10,8 @@ import './Stock.css';
 import axios from 'axios';
 import Validators from '../validators/validators'
 import { Row, Col, Card, Table, Button, Badge, Modal, ModalBody, CustomInput, ModalHeader, Input, FormGroup, ModalFooter} from 'reactstrap';
+import Menu from '../menu/Menu';
+
 
 class Stock extends Component {
 
@@ -27,7 +29,9 @@ class Stock extends Component {
             modalNewProduct: false,
             modalEditProduct: false,
             modalDeleteProduct: false,
+            modalWait: false,
             currentProduct : {},
+
 
             nomProduit : "",
             prixAchat : "",
@@ -496,11 +500,12 @@ class Stock extends Component {
         return (
             <div>
                 <Row>
-                    <Col>
+
                         <h3>
                             Gestion des stocks
                         </h3>
-                    </Col>
+
+
                 </Row>
                 <hr />
                 <Row>
@@ -533,6 +538,7 @@ class Stock extends Component {
                     <Col lg="8">
                         <h5> Liste des produits </h5>
                             <Button color="success"  onClick={this.showModal.bind(this, 'modalNewProduct')}><img src={plus} className="NewUser"/> Nouveau produit</Button>{' '}
+                            <Button color="success"  onClick={this.props.action}><img src={plus}  className="NewUser" /> Ajouter fichier CSV</Button>{' '}
                             <Table className="Table">
                                 
                                 <thead>

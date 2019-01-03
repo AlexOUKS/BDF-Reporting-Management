@@ -11,7 +11,7 @@ console.log(sessionStorage.getItem('token'));
 if (sessionStorage.getItem('token')) {
     ReactDOM.render(<Menu />, document.getElementById('root'));
 } else {
-    ReactDOM.render(<Auth />, document.getElementById('root'));
+    ReactDOM.render(<Menu />, document.getElementById('root'));
 }
 
 
