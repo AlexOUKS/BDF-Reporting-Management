@@ -52,23 +52,73 @@ class Reporting extends Component {
                     console.log(this.state.venteTemp);
 
                     let A = this.findPercentageProduct(this.state.venteTemp);
+
                     let dataPercentage = [];
                     let dataName = [];
-                    for (let j = 0 ; j < A.length; j++) {
-                        dataPercentage.push(A[j].occurence);
-                        dataName.push(A[j].nom)
-                    }
-                    console.log(dataPercentage)
-                    this.setState({
-                        dataDoughnut: {datasets: [
-                                {
-                                    data :dataPercentage
-                                    ,label: ["My First dataset","ok"]
-                                }
-                            ] ,
-                        labels: dataName}
+                    let colors = [];
 
-                    , optionDoughnut : {animation :{animateRotate : true}}});
+                    for (let j = 0 ; j < A.length; j++) {
+                        dataPercentage.push(Math.round(A[j].occurence));
+                        dataName.push(A[j].nom);
+                        colors.push('#'+(Math.random()*0xFFFFFF<<0).toString(16));
+                    }
+
+                    let top5Products = [];
+                    let produitsNom = [];
+                    let produitsQte = []
+                    let produitsColor = [];
+
+                    top5Products = A.slice(0).sort(function(a,b){return  a.nombre - b.nombre});   
+                    top5Products = top5Products.reverse();
+                    
+                    for (let i = 0; i < 5 ; i++) {
+                        if (Validators.isDefined(top5Products[i])) {
+                            produitsNom.push(top5Products[i].nom);
+                            produitsQte.push(top5Products[i].nombre);
+                            produitsColor.push('#'+(Math.random()*0xFFFFFF<<0).toString(16));
+                        }
+                    }
+
+                    console.log(produitsNom,produitsQte,produitsColor)
+
+                    this.setState({
+                        dataBar : {
+                            labels: produitsNom,
+                            datasets: [{
+                                backgroundColor: produitsColor,
+                                data: produitsQte,
+                            }]
+                        },
+                        optionsBar: {
+                            legend: { display: false },
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                    }
+                                }],
+                                xAxes: [{
+                                    stacked: false,
+                                    ticks: {
+                                        autoSkip: false
+                                    }
+                                }]
+                            }
+                          },
+                        dataDoughnut: {
+                            datasets: [{   
+                                backgroundColor: colors,
+                                data :dataPercentage
+                            }],
+                            labels: dataName
+                        }, 
+                        optionDoughnut : {
+                            animation :{animateRotate : true},
+                            legend: {
+                                display: false
+                             },
+                        }
+                    });
                     console.log(A);
 
 
@@ -93,7 +143,7 @@ class Reporting extends Component {
 
 
             if( !this.tupleFind(tempArray, Produit)){
-                console.log(Produit.produit);
+ 
                 let occurence = 0;
 
                 for (let i = 0 ; i < countProduct; i++) {
@@ -103,9 +153,8 @@ class Reporting extends Component {
 
                     }
                 }
-                console.log(Produit.quantité);
-                console.log(occurence);
-                const tuple = {nom : Produit.produit, occurence : (occurence/countProduct)*100};
+                
+                const tuple = {nom : Produit.produit, occurence : (occurence/countProduct)*100, nombre : occurence};
                 tempArray.push(tuple);
             }
             else{
@@ -117,7 +166,7 @@ class Reporting extends Component {
         for (let k = 0 ; k < tempArray.length; k++) {
             totalOccurence += tempArray[k].occurence;
         }
-        console.log(totalOccurence);
+
         return tempArray;
     }
 
@@ -145,23 +194,53 @@ class Reporting extends Component {
     render() {
         return (
             <div>
-                < Doughnut
-                        data={this.state.dataDoughnut}
-                        options= {this.state.optionDoughnut}
-                        height={500}
-                        width={800}
-                />
-                {/*<select>
-                    <option>Mois</option>
-                    <option>année</option>
-                </select> */}
-
-                <p> De </p>
-                <input type={"date"} id={"DateDebut"}></input>
-                <p> à </p>
-                <input type={"date"} id={"DateFin"}></input>
-                <button onClick={this.requestDataFromDate}>validé</button>
-
+                <Row>
+                    <Col>
+                    <h3>
+                        Reporting des ventes
+                    </h3>
+                    </Col>
+                </Row>
+                <hr />
+                <Row>
+                    
+                    <Col lg="2">
+                    <h5> Date de filtrage </h5>
+                    De
+                    <Input type={"date"} id={"DateDebut"}></Input>
+                    à 
+                    <Input type={"date"} id={"DateFin"}></Input>
+                    </Col>  
+                    
+                    <Button onClick={this.requestDataFromDate}>Valider</Button>
+                </Row>
+                <hr />
+                <Row>
+                    
+                    <Col lg="6">
+                        <h5> Digramme des ventes totales</h5>
+                        < Doughnut
+                                data={this.state.dataDoughnut}
+                                options= {this.state.optionDoughnut}
+                                height={500}
+                                width={800}
+                        />
+                    </Col>
+                    <Col lg="6">
+                         <h5> Top 5 des meilleures ventes</h5>
+                        < Bar
+                                data={this.state.dataBar}
+                                options= {this.state.optionsBar}
+                                height={500}
+                                width={800}
+                            />
+                    </Col>
+                    {/*<select>
+                        <option>Mois</option>
+                        <option>année</option>
+                    </select> */}
+                </Row>
+                
 
             </div>
 

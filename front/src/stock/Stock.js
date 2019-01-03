@@ -67,7 +67,9 @@ class Stock extends Component {
                 this.setState({ products : products });
                 this.showProducts();
                 this.countCategories();
-                this.showProductsBar(this.state.products.data[0].categorieProduit.nom);
+                if (Validators.isDefined(this.state.products.data[0])) {
+                    this.showProductsBar(this.state.products.data[0].categorieProduit.nom);
+                }
               });
         
         
@@ -175,14 +177,13 @@ class Stock extends Component {
         this.setState({
           [field]: event.target.value
         });
-        console.log(this.state);
+
     }
 
     closeModal(tabId) {
         this.setState({
             [tabId]: false
         });
-        console.log(this.state.modalEditProduct)
     }
 
     showModal(modal, product) {
@@ -301,7 +302,7 @@ class Stock extends Component {
         }
     }
 
-    editProduct(id) {
+    editCategorieProduit(id) {
         let fields = {
             "nomCategorie" : document.getElementById("nomCategorie").value,
             "colorGraph" : document.getElementById("colorGraph").value,
@@ -428,70 +429,76 @@ class Stock extends Component {
     }
 
     countCategories() {
-        let categoriesSelect = []
-        let categories = []
-        let colors = []
-        let categorieList = []
-
-        for (let i=0; i < Object.keys(this.state.products.data).length; i++) {
-            
-            let product = this.state.products.data[i];
-            
-            if (!categories.includes(product.categorieProduit.nom)) {
-
-                categories.push(product.categorieProduit.nom);
-                colors.push(product.categorieProduit.colorGraph);
-                categorieList.push(<tr>
-                    <td> {product.categorieProduit.nom} </td>
-                    <td> 
-                        <Button color="warning" onClick={this.showModal.bind(this, 'modalEditCategorie', product.categorieProduit)}><img src={modify} /></Button>{' '}
-                        <Button color="danger" onClick={this.showModal.bind(this, 'modalDeleteCategorie', product.categorieProduit)}><img src={deleteimg} /></Button>{' '}
-                    </td>                 
-                </tr>);
-                categoriesSelect.push(
-                    <option>{product.categorieProduit.nom}</option>
-                );
+        axios.get(process.env.REACT_APP_API_URL+'/stock/getCategorieProduits',
+        {
+            headers : {
+                'authtoken' : sessionStorage.getItem('token')
             }
-                
-        }
+        } )
+            .then(res =>  {
+                const categories = res.data;
+                let categorieList = []
+                let categoriesSelect = []
+                let categorieNames = []
+                let colors = []
+                let categorieStat = [];
+                let donnees = [];
 
-        let categorieStat = [];
-        let donnees = [];
+                if (Validators.isDefined(categories)) {
+                    for (let i=0; i < Object.keys(categories.data).length; i++) {
+                        
+                        categorieList.push(<tr>
+                            <td> {categories.data[i].nom} </td>
+                            <td> 
+                                <Button color="warning" onClick={this.showModal.bind(this, 'modalEditCategorie', categories.data[i])}><img src={modify} /></Button>{' '}
+                                <Button color="danger" onClick={this.showModal.bind(this, 'modalDeleteCategorie', categories.data[i])}><img src={deleteimg} /></Button>{' '}
+                            </td>                 
+                        </tr>);
+
+                        categoriesSelect.push(
+                            <option>{categories.data[i].nom}</option>
+                        );
+
+                        categorieNames.push(categories.data[i].nom);
+
+                        colors.push(categories.data[i].colorGraph);
+
+                        categorieStat.push({"categorie" : categories.data[i].nom, "count" : 0});
+                    }
+
+                    for (let i=0; i < Object.keys(this.state.products.data).length; i++) {
+                        let product = this.state.products.data[i];
         
-
-        for (let j = 0 ; j < categories.length; j++) {
-                
-            categorieStat.push({"categorie" : categories[j], "count" : 0});
-        }
-
+                        for (let j = 0 ; j < categorieStat.length; j++) {
+                            
+                            if (categorieStat[j].categorie == product.categorieProduit.nom) {
+                                categorieStat[j].count++;
+                                donnees[j] =  categorieStat[j].count;
         
-        for (let i=0; i < Object.keys(this.state.products.data).length; i++) {
-            let product = this.state.products.data[i];
+                            }
+                        }
+                    
+                    }
 
-            for (let j = 0 ; j < categorieStat.length; j++) {
-                
-                if (categorieStat[j].categorie == product.categorieProduit.nom) {
-                    categorieStat[j].count++;
-                    donnees[j] =  categorieStat[j].count;
-
+                    this.setState({
+                        dataDoughnut : {
+                            labels: categorieNames,
+                            datasets: [{
+                                backgroundColor: colors,
+                                data: donnees,
+                            }]
+                        },
+                        dataListCategories : categorieList,
+                        categoriesSelect : categoriesSelect
+                    
+                    }); 
+                    
                 }
-            }
+
+        });
+            
+            
         
-        }
-        
-        this.setState({
-            dataDoughnut : {
-                labels: categories,
-                datasets: [{
-                    label: ["My First dataset","ok"],
-                    backgroundColor: colors,
-                    data: donnees,
-                }]
-            },
-            dataListCategories : categorieList,
-            categoriesSelect : categoriesSelect
-        
-        }); 
     }
     // ----------------------- VUE HTML -----------------------------
 
@@ -500,12 +507,12 @@ class Stock extends Component {
         return (
             <div>
                 <Row>
-
+                    <Col>
                         <h3>
                             Gestion des stocks
                         </h3>
 
-
+                    </Col>
                 </Row>
                 <hr />
                 <Row>
@@ -731,7 +738,7 @@ class Stock extends Component {
                         </FormGroup>
                         
                         <ModalFooter>
-                            <Button color="success" className="SubmitButton" onClick={this.editProduct.bind(this, this.state.currentCategorie.id)}>Modifier</Button>
+                            <Button color="success" className="SubmitButton" onClick={this.editCategorieProduit.bind(this, this.state.currentCategorie.id)}>Modifier</Button>
                             <Button color="warning" className="SubmitButton" onClick={this.closeModal.bind(this, 'modalEditCategorie')}>Annuler</Button>
                         </ModalFooter>
                     </ModalBody>

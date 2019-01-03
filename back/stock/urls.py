@@ -10,4 +10,5 @@ urlpatterns = [
     path('deleteCategorieProduit', logics.deleteCategorieProduit, name='deleteCategorieProduit'),
     path('newCategorieProduit', logics.newCategorieProduit, name='newCategorieProduit'),
     path('editCategorieProduit', logics.editCategorieProduit, name='editCategorieProduit'),
+    path('getCategorieProduits', logics.getCategorieProduits, name='getCategorieProduits'),
 ]

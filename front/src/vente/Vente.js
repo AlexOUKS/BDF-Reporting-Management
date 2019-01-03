@@ -15,7 +15,7 @@ class Vente extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ventes :[],
+            ventes : "",
         }
 
         };
@@ -45,14 +45,14 @@ componentDidMount() {
         }
 
                 ).then(res => {
-                    const ventes = res.data
-                    this.setState({ventes});
+                    console.log(res)
+                    this.setState({ventes : res.data.ventesNouvellesTotal});
 
-                    if (this.state.ventes.lenght !=0 ){
+                 //   if (this.state.ventes.length !=0 ){
 
 
-                        this.showVentes();
-                    }
+                     //   this.showVentes();
+                 //   }
 
 
 
@@ -63,7 +63,7 @@ componentDidMount() {
   showTableColumn(){
     let table = []
       if (this.state.ventes.lenght !=0 ) {
-          if (Validators.isDefined(this.state.ventes)) {
+          if (Validators.isDefined(this.state.ventesNouvellesTotal)) {
               table.push(
                   <tr>
                       <th>Date de vente</th>
@@ -79,7 +79,7 @@ componentDidMount() {
 
 }
 
-
+/*
 
   showVentes() {
 
@@ -99,26 +99,7 @@ componentDidMount() {
 
                     </tr>);
 
-            }
-        }
-        return table
-}
-
-
-    // ----------------------- VUE HTML -----------------------------
-
-    render() {
-        return (
-            <div>
-
-                <Input type="file" name="" id="" onChange={this.handleselectedFile} />
-                <button onClick={this.handleUpload}>Upload</button>
-                <div> {Math.round(this.state.loaded,2) } %</div>
-
-                <Row>
-                    <Col>
-                        <Card>
-                        <Table className="Table">
+                    <Table className="Table">
                             <thead>
                              {this.showTableColumn()}
                             </thead>
@@ -128,7 +109,29 @@ componentDidMount() {
 
                             </tbody>
                         </Table>
-                        </Card>
+
+            } 
+            return table
+        }
+        
+}
+*/
+
+    // ----------------------- VUE HTML -----------------------------
+
+    render() {
+        return (
+            <div>
+
+                <Input type="file" name="" id="" onChange={this.handleselectedFile} />
+                <Button type="success" onClick={this.handleUpload}>Upload</Button>
+                <div> {Math.round(this.state.loaded,2) } %</div>
+
+                <Row>
+                    <Col>
+                        
+                            {(this.state.ventes == 0) ? "Aucune vente n'a été ajoutée !" : this.state.ventes+"ont été ajoutées dans la base de données !"}
+                        
                     </Col>
                 </Row>
 

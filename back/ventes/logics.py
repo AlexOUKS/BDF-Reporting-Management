@@ -58,6 +58,7 @@ def load(request):
 
 
             o = 3
+            ventesNouvellesTotal = 0
             for line in file.readlines():# on balaye tout les lignes du fichier puis on fait les requetes necessaire au remplissage de la BDD
 
                 line2 = line.decode('utf-8')
@@ -84,7 +85,7 @@ def load(request):
                     lieuDeVie = lieuDeVieExist[0]
                 else:
                     #print("existe pas")
-                    lieuDeVie = ventes_temp.models.LieuDeVieTemp()
+                    lieuDeVie.nom = lieuDeVie.nom
                     lieuDeVie.save()
 
                 vente = Vente()
@@ -102,12 +103,13 @@ def load(request):
 
                 else :
                     print("vente existe pas")
+                    ventesNouvellesTotal += 1
                     vente.save()
                 o += 1
-            reponse = JsonResponse(listVenteAlreadyExist,safe=False)
+            reponse = JsonResponse({"ventesNouvellesTotal" : ventesNouvellesTotal},safe=False)
 
-            for d in listVenteAlreadyExist:
-                listVenteAlreadyExist.remove(d)
+            """for d in listVenteAlreadyExist:
+                listVenteAlreadyExist.remove(d)"""
 
             return reponse
         else :

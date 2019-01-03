@@ -283,3 +283,14 @@ def editCategorieProduit(request):
             return HttpResponseBadRequest("Vous n'avez pas mis de corps à votre requête")
     else:
         return HttpResponseForbidden("Accès refusé")
+
+def getCategorieProduits(request):
+    if (request.method == "GET"):
+            
+        categories = CategorieProduit.objects.all()
+
+        categoriesJson = [ obj.to_json() for obj in categories ]
+
+        return HttpResponse(json.dumps({"data": categoriesJson}), content_type='application/json')
+    
+    return HttpResponseForbidden("Accès refusé")
