@@ -139,12 +139,12 @@ def getVenteDF(request):
         data = Validators.is_valid_json(request.body)
 
         if data == False:
-            print("data false")
+            
             return HttpResponseBadRequest("Probleme data")
         else:
             dateDebut = data["DateDebut"]
             dateFin = data["DateFin"]
-            print(dateDebut, dateFin)
+            
             allVente = Vente.objects.all()
             for vente in allVente:
                 if dateDebut <= vente.dateVente <= dateFin :
