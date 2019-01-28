@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import django_heroku
 from django.core.exceptions import ImproperlyConfigured
 
 
@@ -167,3 +168,6 @@ CORS_ALLOW_HEADERS = (
 #CORS_ORIGIN_WHITELIST = (
  #   '<YOUR_DOMAIN>[:PORT]',
 #)
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
